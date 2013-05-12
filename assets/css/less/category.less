@@ -1,0 +1,110 @@
+@import "lesshat.less";
+@import "basic.settings.less";
+
+@oddListBackgroundColor: white;
+@evenListBackgroundColor: rgba(180, 255, 255, 0.4);
+
+#category-list {
+	position: relative;
+	min-height: 250px;
+	border-top: 1px solid lighten(black, 40%);
+	border-bottom: 1px solid lighten(black, 40%);
+	padding: 6px 0px;
+	
+	.placeholder {
+		height: 20px;
+		background: lighten(yellow, 20%);
+	}
+	
+	> li {
+		list-style-type: none;
+		 > ul {
+			padding: 0px;
+			li {
+				list-style-type: none;
+				padding-top: 3px;
+				cursor: pointer;
+				.unselectable();
+
+				// open / close indicator
+				.open-close-indicator {
+					display: inline-block;
+					vertical-align: 2px;
+					margin-left: 10px;
+					&.collapse {
+						width: 0px;
+						height: 0px;
+						border-style: solid;
+						border-width: 4px 0 4px 6.9px;
+						border-color: transparent transparent transparent #000;
+
+						margin-left: 6px;
+						margin-right: 1px;
+					}
+					&.expend {
+						width: 0px;
+						height: 0px;
+						border-style: solid;
+						border-width: 6.9px 4px 0 4px;
+						border-color: #000 transparent transparent transparent;
+
+						margin-left: 5px;
+						margin-right: 1px;
+					}
+				}
+				
+				&:nth-of-type(odd) {
+					background: darken(@oddListBackgroundColor, 3%);
+				}
+				&:nth-of-type(even) {
+					background: @evenListBackgroundColor;
+				}
+				
+				&:hover {
+					background: lighten(gray, 40%);
+				}
+
+				i {
+					&.icon-stack{
+						color: #0ac;
+					}
+				}
+				
+				.name {
+					display: inline-block;
+				}
+
+				ul {
+					background: @oddListBackgroundColor;
+					border-top: 1px solid lighten(black, 80%);
+		/*			.box-shadow(~"inset 0px 1px 1px -1px rgba(0,0,0,0.5)");*/
+				}
+
+				.rename-category-form {
+					display: inline-block;
+				}
+			}
+			
+		}
+	}
+	
+}
+
+ul#category-menu {
+	position: absolute;
+	list-style-type: none;
+	color: white;
+	padding: 0px;
+	li {
+		cursor: pointer;
+		padding: 2px 8px;
+		background: gray;
+		.unselectable();
+		&:hover {
+			background: lighten(gray, 10%);
+		}
+	}
+	hr {
+		margin: 0px;
+	}
+}

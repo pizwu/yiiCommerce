@@ -1,0 +1,89 @@
+@import "lesshat.less";
+@import "basic.settings.less";
+
+@oddListBackgroundColor: white;
+@evenListBackgroundColor: rgba(180, 255, 255, 0.4);
+
+#product-form {
+	form {
+		label {
+			display: inline-block;
+			width: 100px;
+		}
+		
+		// product category
+		#product-category {
+			display: inline-block;
+			padding: 0px;
+			margin: 0px;
+			margin-left: 2px;
+			li {
+				list-style-type: none;
+				display: inline-block;
+				padding: 0px 10px;
+				border: 1px solid lighten(gray, 10%);
+				margin: 0px 1px;
+			}
+		}
+		
+		// image thumbnail
+		#product-image-thumbnail {
+			.image-pack {
+				display: inline-block;
+				position: relative;
+				
+				.remove-image {
+					display: inline-block;
+					position: absolute;
+					left: 98px;
+					top: 7px;
+					cursor: pointer;
+					i {
+						background: darken(white, 10%);
+					}
+					&:hover {
+						i {
+							background: white;
+							color: darken(red, 10%);
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+#category-selector-list {
+	> ul {
+		padding: 0px;
+		li {
+			list-style-type: none;
+			background: white;
+			border-top: 1px solid gray;
+			cursor: pointer;
+			&:hover {
+				background: lighten(gray, 40%);
+			}
+			ul {
+				background: lighten(gray, 30%);
+			}
+			i.icon-stack {
+				padding-left: 4px;
+			}
+			&.selected {
+				background: lighten(yellow, 40%);
+			}
+		}
+		
+	}
+	
+}
+
+#product-list {
+	overflow: auto;
+	height: 360px;
+	li {
+		border-bottom: 1px solid black;
+		list-style-type: none;
+	}
+}
