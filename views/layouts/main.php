@@ -64,10 +64,11 @@
 		<?php $this->widget('zii.widgets.CMenu',array(
 			'items'=>array(
 				array('label'=>'Home', 'url'=>array('/site/index')),
-				array('label'=>'Category', 'url'=>array('/'.Yii::app()->controller->module->id.'/category')), 
-				array('label'=>'Product', 'url'=>array('/'.Yii::app()->controller->module->id.'/product/admin')), 
-				array('label'=>'Login', 'url'=>array('/site/login'), 'visible'=>Yii::app()->user->isGuest),
-				array('label'=>'Logout ('.Yii::app()->user->name.')', 'url'=>array('/site/logout'), 'visible'=>!Yii::app()->user->isGuest)
+				array('label'=>'Category', 'url'=>array('/yiiCommerce/category/index')), 
+				array('label'=>'Product', 'url'=>array('/yiiCommerce/product/admin')), 
+				array('label'=>'User', 'url'=>array('/user/admin/admin')), 
+				array('label'=>'Login', 'url'=>array('/user/login'), 'visible'=>Yii::app()->user->isGuest),
+				array('label'=>'Logout ('.Yii::app()->user->name.')', 'url'=>array('/user/logout'), 'visible'=>!Yii::app()->user->isGuest)
 			),
 		)); ?>
 	</div><!-- mainmenu -->
