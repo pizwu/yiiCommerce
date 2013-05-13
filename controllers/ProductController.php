@@ -33,7 +33,7 @@ class ProductController extends Controller
 			// ),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
 				'actions'=>array(
-					'admin', 'printCreateForm', 'printCategorySelector', 
+					'admin', 'printCreateForm', 'printEditForm', 'printCategorySelector', 
 					'save', 'unlinkFromCategory', 'delete', 
 				),
 				'users'=>array('admin'),
@@ -62,6 +62,18 @@ class ProductController extends Controller
 	public function actionPrintCreateForm()
 	{
 		$product = new Product;
+		
+		$this->renderPartial('form', array(
+			'product'=>$product, 
+		));
+	}
+	
+	/**
+	 * Print edit form
+	 */
+	public function actionPrintEditForm()
+	{
+		$product = Product::model()->findByPk($_POST['id']);
 		
 		$this->renderPartial('form', array(
 			'product'=>$product, 

@@ -493,63 +493,7 @@
 				
 				// show dialog
 				var productForm = $('#product-form');
-				productForm.dialog('open');
-				
-				// load form from server
-				$.post('<?php echo CHtml::normalizeUrl(array("product/printCreateForm")) ?>', function(data, textStatus, xhr) {
-					
-					// hide loading message
-					productForm.find('.loading-message').hide();
-					
-					// load form
-					productForm.append(data);
-					
-					// initial date picker
-					$('#product-date-available').datepicker({
-						showOn: "button", 
-						dateFormat: "mm/dd/yy"
-					});
-					$('#product-date-available').change(function(){
-						var date = $(this).val();
-						$(this).prev().text(date);
-					});
-					
-					// filled category with selected
-					var selected = $('#category-list li.selected');
-					var category_id = selected.data('id');
-					var category_name = selected.find('.name').eq(0).text();
-					productForm.find('#product-category').append(
-						'<li data-id="'+category_id+'">'+
-							category_name+
-							'<input type="hidden" name="category[]" value="'+category_id+'" />'+
-						'</li>'
-					);
-					
-					// fine uploader
-					$('#upload-product-image').fineUploader({
-						request: {
-							endpoint: '<?php echo CHtml::normalizeUrl(array("image/upload")) ?>'
-						}, 
-						validation: {
-							allowedExtensions: ['jpeg', 'jpg', 'png'], 
-							sizeLimit: 10*1024*1024
-						}, 
-						text: {
-							uploadButton: 'upload'
-						}
-					}).on('complete', function(event, id, fileName, responseJSON){
-						if (responseJSON.success) {
-							$('#product-image-thumbnail').append(
-								'<div class="image-pack">'+
-									'<img src="<?php echo CHtml::normalizeUrl(array("image/load")) ?>&id='+responseJSON.id+'" width="120" alt="product-image" />'+
-									'<input type="hidden" name="image[]" value="'+responseJSON.id+'" />'+
-									'<div class="remove-image"><i class="icon-close"></i></div>'+
-								'</div>'	
-							);
-						}
-					});
-					
-				}, 'html');
+				productForm.dialog('option', 'title', 'Create Product').dialog('option', 'action', 'create').dialog('open');
 				
 			}
 		});
@@ -582,8 +526,74 @@
 			minHeight: 400, 
 			minWidth: 600, 
 			title: 'Create Product', 
+			closeOnEscape: false, 
 			open: function(event, ui){
 				$(this).find('.loading-message').show();
+				
+				// load form from server
+				var productForm = $('#product-form');
+				var action = $(this).dialog('option', 'action');
+				var id = (action=='create')? null: $('#product-list .selected').data('id');
+				var postUrl = (action=='create')?
+					'<?php echo CHtml::normalizeUrl(array("product/printCreateForm")) ?>':
+					'<?php echo CHtml::normalizeUrl(array("product/printEditForm")) ?>';
+				$.post(postUrl, { id: id }, function(data, textStatus, xhr) {
+					
+					// hide loading message
+					productForm.find('.loading-message').hide();
+					
+					// load form
+					productForm.append(data);
+					
+					// create: load date picker / category selection from category list
+					if(action=='create'){
+						// initial date picker
+						$('#product-date-available').datepicker({
+							showOn: "button", 
+							dateFormat: "mm/dd/yy"
+						});
+						$('#product-date-available').change(function(){
+							var date = $(this).val();
+							$(this).prev().text(date);
+						});
+						
+						// filled category with selected
+						var selected = $('#category-list li.selected');
+						var category_id = selected.data('id');
+						var category_name = selected.find('.name').eq(0).text();
+						productForm.find('#product-category').append(
+							'<li data-id="'+category_id+'">'+
+								category_name+
+								'<input type="hidden" name="category[]" value="'+category_id+'" />'+
+							'</li>'
+						);
+					}
+					
+					// fine uploader
+					$('#upload-product-image').fineUploader({
+						request: {
+							endpoint: '<?php echo CHtml::normalizeUrl(array("image/upload")) ?>'
+						}, 
+						validation: {
+							allowedExtensions: ['jpeg', 'jpg', 'png'], 
+							sizeLimit: 10*1024*1024
+						}, 
+						text: {
+							uploadButton: 'upload'
+						}
+					}).on('complete', function(event, id, fileName, responseJSON){
+						if (responseJSON.success) {
+							$('#product-image-thumbnail').append(
+								'<div class="image-pack">'+
+									'<img src="<?php echo CHtml::normalizeUrl(array("image/load")) ?>&id='+responseJSON.id+'" width="120" alt="product-image" />'+
+									'<input type="hidden" name="image[]" value="'+responseJSON.id+'" />'+
+									'<div class="remove-image"><i class="icon-close"></i></div>'+
+								'</div>'	
+							);
+						}
+					});
+					
+				}, 'html');
 			}, 
 			close: function(event, ui){
 				$(this).find('form').remove();
@@ -594,7 +604,7 @@
 		$('#category-selector').dialog({
 			autoOpen: false, 
 			modal: true, 
-			minHeight: 400, 
+			minHeight: 200, 
 			minWidth: 480, 
 			title: 'Select Product Categories', 
 			open: function(event, ui){
@@ -753,7 +763,13 @@
 			"click .delete": "deleteProduct"
 		}, 
 		editProduct: function(e){
-			console.log('edit');
+			
+			$(this.el).find('.selected').removeClass('selected');
+			$(e.currentTarget).parentsUntil('li').parent().addClass('selected');
+			
+			// open dialog
+			$('#product-form').dialog('option', 'title', 'Edit Product').dialog('option', 'action', 'edit').dialog('open');
+			
 		}, 
 		unlinkProductFromCategory: function(e){
 			

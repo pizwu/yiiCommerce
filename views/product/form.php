@@ -25,7 +25,14 @@
 	
 	<!-- category -->
 	<label for="product-category">category</label>
-	<ul id="product-category"></ul>
+	<ul id="product-category">
+	<?php foreach ($product->productCategoryRefs as $key => $ref): ?>
+		<li data-id="<?php echo $ref->category_id ?>">
+			<?php echo $ref->category->name ?>
+			<input type="hidden" name="category[]" value="<?php echo $ref->category_id ?>" />
+		</li>
+	<?php endforeach ?>
+	</ul>
 	<button type="button" id="show-category-selector">...</button><br />
 	
 	<!-- date available -->
@@ -37,7 +44,16 @@
 	<!-- image -->
 	<label for="product-image">image </label>
 	<div id="upload-product-image"></div>
-	<div id="product-image-thumbnail"></div><br />
+	<div id="product-image-thumbnail">
+	<?php foreach ($product->productImageRefs as $key => $ref): ?>
+		<div class="image-pack">
+			<img src="<?php echo CHtml::normalizeUrl(array("image/load", 'id'=>$ref->image_id)) ?>" 
+				width="120" alt="product image" />
+			<input type="hidden" name="image[]" value="<?php echo $ref->image_id ?>" />
+			<div class="remove-image"><i class="icon-close"></i></div>
+		</div>
+	<?php endforeach ?>
+	</div><br />
 	
 	<!-- weight -->
 	<label for="product-weight">weight </label>
@@ -55,6 +71,6 @@
 	
 	<hr />
 	
-	<button type="submit">create</button>
+	<button type="submit"><?php echo (isset($product->id))? 'update': 'create' ?></button>
 	<button type="button" id="close-product-form"><i class="icon-close"></i></button>
 </form>
