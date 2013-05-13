@@ -33,7 +33,8 @@ class ProductController extends Controller
 			// ),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
 				'actions'=>array(
-					'index', 'printCreateForm', 'printCategorySelector', 'save', 
+					'admin', 'printCreateForm', 'printCategorySelector', 
+					'save', 'unlinkFromCategory', 'delete', 
 				),
 				'users'=>array('admin'),
 			),
@@ -46,10 +47,12 @@ class ProductController extends Controller
 	/**
 	 * Show all products, and filter
 	 */
-	public function actionIndex()
+	public function actionAdmin()
 	{
+		$products = Product::model()->findAll(array('limit'=>20));
 		
-		$this->render('index', array(
+		$this->render('admin', array(
+			'products'=>$products, 
 		));
 	}
 
@@ -156,5 +159,30 @@ class ProductController extends Controller
 		
 	}
 	
+	/**
+	 * Unlink category
+	 * given: category_id, product_id
+	 */
+	public function actionUnlinkFromCategory()
+	{
+		$ref = ProductCategoryRef::model()->find('category_id=:category_id AND product_id=:product_id', array(
+			':category_id'=>$_POST['category_id'], 
+			':product_id'=>$_POST['product_id'], 
+		));
+		$ref->delete();
+		
+		echo CJSON::encode(1);
+	}
 	
+	/**
+	 * Delete product
+	 * given: product_id
+	 */
+	public function actionDelete()
+	{
+		$product = Product::model()->findByPk($_POST['id']);
+		$product->delete();
+		
+		echo CJSON::encode(1);
+	}
 }

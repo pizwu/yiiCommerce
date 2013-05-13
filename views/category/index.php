@@ -133,6 +133,7 @@
 				this.status = {};
 				this.status.showMenu = false;
 				this.status.expendAll = false;
+				this.categoryId = null;
 			}, 
 			el: $('#category-list'), 
 			events: {
@@ -152,7 +153,10 @@
 				
 				// list actions
 				"dblclick li": "toggleList", 
-				"click li > .open-close-indicator": "toggleListByIndicator"
+				"click li > .open-close-indicator": "toggleListByIndicator", 
+				
+				// product list
+				"click li": "showProductInCategory"
 				
 			}, 
 			showMenu: function(e){
@@ -350,8 +354,32 @@
 				e.stopPropagation();
 				
 				$(e.currentTarget).parent().dblclick();
+			}, 
+			showProductInCategory: function(e){
+
+				e.stopPropagation();
+				
+				$(this.el).find('.selected').removeClass('selected');
+				$(e.currentTarget).addClass('selected');
+
+				// if category id changed, reload product list
+				if(this.categoryId != $(e.currentTarget).data('id')){
+
+					// renew category id
+					this.categoryId = $(e.currentTarget).data('id');
+
+					// reload product list
+					var category_id = this.categoryId;
+					$.post('<?php echo CHtml::normalizeUrl(array("category/loadProductList")) ?>', 
+					{ category_id: category_id }, function(data, textStatus, xhr) {
+
+						$('#product-list').html(data);
+
+					}, 'html');
+
+				}
+
 			}
-			
 		});
 		var categoryList = new CategoryList;
 		
@@ -717,33 +745,48 @@
 	var ProductList = Backbone.View.extend({
 		initialize: function(){
 			console.log('initialize product list');
-			this.categoryId = null;
 		}, 
-		el: $('#category-list'), 
+		el: $('#product-list'), 
 		events: {
-			"click li": "showProductInCategory"
+			"click .edit": "editProduct", 
+			"click .unlink": "unlinkProductFromCategory", 
+			"click .delete": "deleteProduct"
 		}, 
-		showProductInCategory: function(e){
+		editProduct: function(e){
+			console.log('edit');
+		}, 
+		unlinkProductFromCategory: function(e){
 			
-			e.stopPropagation();
+			var product_id = $(e.currentTarget).parentsUntil('li').parent().data('id');
+			var product_name = $(e.currentTarget).parentsUntil('li').parent().find('.name').text();
+			var category = $('#category-list li.selected');
+			var category_id = category.data('id');
+			var category_name = category.find('.name').text();
 			
-			// if category id changed, reload product list
-			if(this.categoryId != $(e.currentTarget).data('id')){
+			var result = confirm("unlink product: \""+product_name+"\" from category: "+category_name+"?");
+			if(result){
 				
-				// renew category id
-				this.categoryId = $(e.currentTarget).data('id');
-				
-				// reload product list
-				var category_id = this.categoryId;
-				$.post('<?php echo CHtml::normalizeUrl(array("category/loadProductList")) ?>', 
-				{ category_id: category_id }, function(data, textStatus, xhr) {
+				$.post('<?php echo CHtml::normalizeUrl(array("product/unlinkFromCategory")) ?>', { category_id: category_id, product_id: product_id }, function(data, textStatus, xhr) {
 					
-					$('#product-list').html(data);
+					$(e.currentTarget).parentsUntil('li').parent().remove();
 					
-				}, 'html');
+				}, 'json');
 				
 			}
 			
+		}, 
+		deleteProduct: function(e){
+			
+			var name = $(e.currentTarget).parentsUntil('li').parent().find('.name').text();
+			var product_id = $(e.currentTarget).parentsUntil('li').parent().data('id');
+			var result = confirm("delete product \""+name+"\"?");
+			if(result){
+				
+				$.post('<?php echo CHtml::normalizeUrl(array("product/delete")) ?>', { id: product_id }, function(data, textStatus, xhr) {
+					$(e.currentTarget).parentsUntil('li').parent().remove();
+				}, 'json');
+				
+			}
 		}
 	});
 	var productList = new ProductList;

@@ -65,7 +65,7 @@
 			'items'=>array(
 				array('label'=>'Home', 'url'=>array('/site/index')),
 				array('label'=>'Category', 'url'=>array('/'.Yii::app()->controller->module->id.'/category')), 
-				array('label'=>'Product', 'url'=>array('/'.Yii::app()->controller->module->id.'/product')), 
+				array('label'=>'Product', 'url'=>array('/'.Yii::app()->controller->module->id.'/product/admin')), 
 				array('label'=>'Login', 'url'=>array('/site/login'), 'visible'=>Yii::app()->user->isGuest),
 				array('label'=>'Logout ('.Yii::app()->user->name.')', 'url'=>array('/site/logout'), 'visible'=>!Yii::app()->user->isGuest)
 			),

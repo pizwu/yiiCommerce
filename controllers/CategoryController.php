@@ -184,16 +184,9 @@ EOD;
 	{
 		$productRefs = ProductCategoryRef::model()->findAll('category_id=:category_id', array(':category_id'=>$_POST['category_id']));
 		
-		foreach ($productRefs as $key => $ref) {
-			echo "<li>";
-				echo '<div class="name">'.$ref->product->name.'</div>';
-				if(!empty($ref->product->productImageRefs))
-					echo 
-					'<div class="image">
-						<img src="'.CHtml::normalizeUrl(array("image/load", 'id'=>$ref->product->productImageRefs[0]->image_id)).'" width="120" alt="product image" />
-					</div>';
-			echo "</li>";
-		}
-		
+		$this->renderPartial('productList', array(
+			'productRefs'=>$productRefs, 
+		));
+
 	}
 }

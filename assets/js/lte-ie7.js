@@ -6,8 +6,9 @@ window.onload = function() {
 		el.innerHTML = '<span style="font-family: \'icomoon\'">' + entity + '</span>' + html;
 	}
 	var icons = {
-			'icon-close' : '&#xe000;',
-			'icon-stack' : '&#xe001;'
+			'icon-close' : '&#xe001;',
+			'icon-pencil' : '&#xe002;',
+			'icon-link' : '&#xe000;'
 		},
 		els = document.getElementsByTagName('*'),
 		i, attr, html, c, el;

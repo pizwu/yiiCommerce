@@ -82,8 +82,24 @@
 #product-list {
 	overflow: auto;
 	height: 360px;
+	border-top: 1px solid black;
+	border-bottom: 1px solid black;
+	padding-left: 0px;
 	li {
 		border-bottom: 1px solid black;
 		list-style-type: none;
+		position: relative;
+		min-height: 120px;
+		.tools {
+			position: absolute;
+			right: 0px;
+			top: 0px;
+			button {
+				display: block;
+				width: 70px;
+				margin: 4px 0px;
+				height: 24px;
+			}
+		}
 	}
 }

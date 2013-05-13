@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: May 12, 2013 at 10:40 PM
+-- Generation Time: May 13, 2013 at 08:47 AM
 -- Server version: 5.5.15
 -- PHP Version: 5.3.15
 
@@ -184,9 +184,9 @@ CREATE TABLE IF NOT EXISTS `osc_product` (
   `date_added` int(32) NOT NULL,
   `last_modified` int(32) DEFAULT NULL,
   `date_available` int(32) DEFAULT NULL,
-  `weight` decimal(5,2) NOT NULL,
+  `weight` decimal(5,2) DEFAULT NULL,
   `status` tinyint(1) NOT NULL,
-  `tax_class_id` int(11) NOT NULL,
+  `tax_class_id` int(11) DEFAULT NULL,
   `manufacturer_id` int(11) DEFAULT NULL,
   `description` text COMMENT '	',
   `url` varchar(255) DEFAULT NULL,
@@ -304,8 +304,8 @@ CREATE TABLE IF NOT EXISTS `osc_product_multilingual` (
 -- Constraints for table `osc_category_image_ref`
 --
 ALTER TABLE `osc_category_image_ref`
-  ADD CONSTRAINT `fk_osc_category_image_ref_osc_category` FOREIGN KEY (`category_id`) REFERENCES `osc_category` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `fk_osc_category_image_ref_osc_image1` FOREIGN KEY (`image_id`) REFERENCES `osc_image` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `fk_osc_category_image_ref_osc_category` FOREIGN KEY (`category_id`) REFERENCES `osc_category` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_osc_category_image_ref_osc_image1` FOREIGN KEY (`image_id`) REFERENCES `osc_image` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `osc_category_multilingual`
@@ -339,35 +339,35 @@ ALTER TABLE `osc_manufacturer_multilingual`
 -- Constraints for table `osc_product`
 --
 ALTER TABLE `osc_product`
-  ADD CONSTRAINT `fk_products_manufacturers1` FOREIGN KEY (`manufacturer_id`) REFERENCES `osc_manufacturer` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `fk_products_manufacturers1` FOREIGN KEY (`manufacturer_id`) REFERENCES `osc_manufacturer` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `osc_product_attribute_multilingual`
 --
 ALTER TABLE `osc_product_attribute_multilingual`
-  ADD CONSTRAINT `fk_osc_product_attribute_multilingual_osc_product_attribute1` FOREIGN KEY (`attribute_id`) REFERENCES `osc_product_attribute` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `fk_osc_product_attribute_multilingual_osc_language1` FOREIGN KEY (`language_id`) REFERENCES `osc_language` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `fk_osc_product_attribute_multilingual_osc_product_attribute1` FOREIGN KEY (`attribute_id`) REFERENCES `osc_product_attribute` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_osc_product_attribute_multilingual_osc_language1` FOREIGN KEY (`language_id`) REFERENCES `osc_language` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `osc_product_attribute_value`
 --
 ALTER TABLE `osc_product_attribute_value`
-  ADD CONSTRAINT `fk_osc_product_attribute_value_osc_product_attribute1` FOREIGN KEY (`attribute_id`) REFERENCES `osc_product_attribute` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `fk_osc_product_attribute_value_osc_product1` FOREIGN KEY (`product_id`) REFERENCES `osc_product` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `fk_osc_product_attribute_value_osc_product_attribute1` FOREIGN KEY (`attribute_id`) REFERENCES `osc_product_attribute` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_osc_product_attribute_value_osc_product1` FOREIGN KEY (`product_id`) REFERENCES `osc_product` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `osc_product_category_ref`
 --
 ALTER TABLE `osc_product_category_ref`
-  ADD CONSTRAINT `fk_products_to_categories_products1` FOREIGN KEY (`product_id`) REFERENCES `osc_product` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `fk_products_to_categories_categories1` FOREIGN KEY (`category_id`) REFERENCES `osc_category` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `fk_products_to_categories_products1` FOREIGN KEY (`product_id`) REFERENCES `osc_product` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_products_to_categories_categories1` FOREIGN KEY (`category_id`) REFERENCES `osc_category` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `osc_product_image_ref`
 --
 ALTER TABLE `osc_product_image_ref`
-  ADD CONSTRAINT `fk_products_images_products1` FOREIGN KEY (`product_id`) REFERENCES `osc_product` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `fk_osc_product_image_ref_osc_image1` FOREIGN KEY (`image_id`) REFERENCES `osc_image` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `fk_products_images_products1` FOREIGN KEY (`product_id`) REFERENCES `osc_product` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_osc_product_image_ref_osc_image1` FOREIGN KEY (`image_id`) REFERENCES `osc_image` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `osc_product_multilingual`
