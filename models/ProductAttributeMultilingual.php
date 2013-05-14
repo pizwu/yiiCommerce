@@ -1,9 +1,9 @@
 <?php
 
 /**
- * This is the model class for table "osc_product_attribute_multilingual".
+ * This is the model class for table "tbl_product_attribute_multilingual".
  *
- * The followings are the available columns in table 'osc_product_attribute_multilingual':
+ * The followings are the available columns in table 'tbl_product_attribute_multilingual':
  * @property integer $id
  * @property integer $attribute_id
  * @property integer $language_id
@@ -30,7 +30,7 @@ class ProductAttributeMultilingual extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'osc_product_attribute_multilingual';
+		return 'tbl_product_attribute_multilingual';
 	}
 
 	/**

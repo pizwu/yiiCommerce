@@ -1,9 +1,9 @@
 <?php
 
 /**
- * This is the model class for table "osc_administrator".
+ * This is the model class for table "tbl_administrator".
  *
- * The followings are the available columns in table 'osc_administrator':
+ * The followings are the available columns in table 'tbl_administrator':
  * @property integer $id
  * @property string $username
  * @property string $password
@@ -25,7 +25,7 @@ class Administrator extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'osc_administrator';
+		return 'tbl_administrator';
 	}
 
 	/**

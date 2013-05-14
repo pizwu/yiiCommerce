@@ -1,9 +1,9 @@
 <?php
 
 /**
- * This is the model class for table "osc_category".
+ * This is the model class for table "tbl_category".
  *
- * The followings are the available columns in table 'osc_category':
+ * The followings are the available columns in table 'tbl_category':
  * @property integer $id
  * @property integer $parent_id
  * @property string $name
@@ -33,7 +33,7 @@ class Category extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'osc_category';
+		return 'tbl_category';
 	}
 
 	/**

@@ -1,9 +1,9 @@
 <?php
 
 /**
- * This is the model class for table "osc_language".
+ * This is the model class for table "tbl_language".
  *
- * The followings are the available columns in table 'osc_language':
+ * The followings are the available columns in table 'tbl_language':
  * @property integer $id
  * @property string $name
  * @property string $code
@@ -33,7 +33,7 @@ class Language extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'osc_language';
+		return 'tbl_language';
 	}
 
 	/**

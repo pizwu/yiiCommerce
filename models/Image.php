@@ -1,9 +1,9 @@
 <?php
 
 /**
- * This is the model class for table "osc_image".
+ * This is the model class for table "tbl_image".
  *
- * The followings are the available columns in table 'osc_image':
+ * The followings are the available columns in table 'tbl_image':
  * @property integer $id
  * @property string $image
  * @property string $type
@@ -32,7 +32,7 @@ class Image extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'osc_image';
+		return 'tbl_image';
 	}
 
 	/**

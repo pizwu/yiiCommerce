@@ -1,9 +1,9 @@
 <?php
 
 /**
- * This is the model class for table "osc_language_image_ref".
+ * This is the model class for table "tbl_language_image_ref".
  *
- * The followings are the available columns in table 'osc_language_image_ref':
+ * The followings are the available columns in table 'tbl_language_image_ref':
  * @property integer $id
  * @property integer $language_id
  * @property integer $image_id
@@ -29,7 +29,7 @@ class LanguageImageRef extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'osc_language_image_ref';
+		return 'tbl_language_image_ref';
 	}
 
 	/**

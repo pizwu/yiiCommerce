@@ -1,9 +1,9 @@
 <?php
 
 /**
- * This is the model class for table "osc_product_image_ref".
+ * This is the model class for table "tbl_product_image_ref".
  *
- * The followings are the available columns in table 'osc_product_image_ref':
+ * The followings are the available columns in table 'tbl_product_image_ref':
  * @property integer $id
  * @property integer $product_id
  * @property integer $image_id
@@ -31,7 +31,7 @@ class ProductImageRef extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'osc_product_image_ref';
+		return 'tbl_product_image_ref';
 	}
 
 	/**

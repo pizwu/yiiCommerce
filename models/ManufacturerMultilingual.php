@@ -1,9 +1,9 @@
 <?php
 
 /**
- * This is the model class for table "osc_manufacturer_multilingual".
+ * This is the model class for table "tbl_manufacturer_multilingual".
  *
- * The followings are the available columns in table 'osc_manufacturer_multilingual':
+ * The followings are the available columns in table 'tbl_manufacturer_multilingual':
  * @property integer $id
  * @property integer $manufacturer_id
  * @property integer $language_id
@@ -33,7 +33,7 @@ class ManufacturerMultilingual extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'osc_manufacturer_multilingual';
+		return 'tbl_manufacturer_multilingual';
 	}
 
 	/**

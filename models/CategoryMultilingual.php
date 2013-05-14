@@ -1,9 +1,9 @@
 <?php
 
 /**
- * This is the model class for table "osc_category_multilingual".
+ * This is the model class for table "tbl_category_multilingual".
  *
- * The followings are the available columns in table 'osc_category_multilingual':
+ * The followings are the available columns in table 'tbl_category_multilingual':
  * @property integer $id
  * @property integer $category_id
  * @property integer $language_id
@@ -30,7 +30,7 @@ class CategoryMultilingual extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'osc_category_multilingual';
+		return 'tbl_category_multilingual';
 	}
 
 	/**

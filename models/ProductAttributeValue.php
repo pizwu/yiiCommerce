@@ -1,9 +1,9 @@
 <?php
 
 /**
- * This is the model class for table "osc_product_attribute_value".
+ * This is the model class for table "tbl_product_attribute_value".
  *
- * The followings are the available columns in table 'osc_product_attribute_value':
+ * The followings are the available columns in table 'tbl_product_attribute_value':
  * @property integer $id
  * @property integer $product_id
  * @property integer $attribute_id
@@ -30,7 +30,7 @@ class ProductAttributeValue extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'osc_product_attribute_value';
+		return 'tbl_product_attribute_value';
 	}
 
 	/**

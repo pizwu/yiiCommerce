@@ -1,9 +1,9 @@
 <?php
 
 /**
- * This is the model class for table "osc_product".
+ * This is the model class for table "tbl_product".
  *
- * The followings are the available columns in table 'osc_product':
+ * The followings are the available columns in table 'tbl_product':
  * @property integer $id
  * @property string $name
  * @property string $sku
@@ -46,7 +46,7 @@ class Product extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'osc_product';
+		return 'tbl_product';
 	}
 
 	/**
