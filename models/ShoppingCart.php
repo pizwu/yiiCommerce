@@ -1,26 +1,26 @@
 <?php
 
 /**
- * This is the model class for table "tbl_image".
+ * This is the model class for table "{{shopping_cart}}".
  *
- * The followings are the available columns in table 'tbl_image':
+ * The followings are the available columns in table '{{shopping_cart}}':
  * @property integer $id
- * @property string $image
- * @property string $type
- * @property integer $size
+ * @property integer $user_id
+ * @property integer $product_id
+ * @property integer $quantity
+ * @property string $final_price
+ * @property integer $timestamp
  *
  * The followings are the available model relations:
- * @property CategoryImageRef[] $categoryImageRefs
- * @property LanguageImageRef[] $languageImageRefs
- * @property ManufacturerImageRef[] $manufacturerImageRefs
- * @property ProductImageRef[] $productImageRefs
+ * @property Users $user
+ * @property Product $product
  */
-class Image extends CActiveRecord
+class ShoppingCart extends CActiveRecord
 {
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
-	 * @return Image the static model class
+	 * @return ShoppingCart the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
@@ -32,7 +32,7 @@ class Image extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'tbl_image';
+		return '{{shopping_cart}}';
 	}
 
 	/**
@@ -43,12 +43,12 @@ class Image extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('image', 'required'),
-			array('size', 'numerical', 'integerOnly'=>true),
-			array('type', 'length', 'max'=>45),
+			array('user_id, product_id, quantity, timestamp', 'required'),
+			array('user_id, product_id, quantity, timestamp', 'numerical', 'integerOnly'=>true),
+			array('final_price', 'length', 'max'=>15),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, image, type, size', 'safe', 'on'=>'search'),
+			array('id, user_id, product_id, quantity, final_price, timestamp', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -60,10 +60,8 @@ class Image extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'categoryImageRefs' => array(self::HAS_MANY, 'CategoryImageRef', 'image_id'),
-			'languageImageRefs' => array(self::HAS_MANY, 'LanguageImageRef', 'image_id'),
-			'manufacturerImageRefs' => array(self::HAS_MANY, 'ManufacturerImageRef', 'image_id'),
-			'productImageRefs' => array(self::HAS_MANY, 'ProductImageRef', 'image_id'),
+			'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
+			'product' => array(self::BELONGS_TO, 'Product', 'product_id'),
 		);
 	}
 
@@ -74,9 +72,11 @@ class Image extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'image' => 'Image',
-			'type' => 'Type',
-			'size' => 'Size',
+			'user_id' => 'User',
+			'product_id' => 'Product',
+			'quantity' => 'Quantity',
+			'final_price' => 'Final Price',
+			'timestamp' => 'Timestamp',
 		);
 	}
 
@@ -92,9 +92,11 @@ class Image extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
-		$criteria->compare('image',$this->image,true);
-		$criteria->compare('type',$this->type,true);
-		$criteria->compare('size',$this->size);
+		$criteria->compare('user_id',$this->user_id);
+		$criteria->compare('product_id',$this->product_id);
+		$criteria->compare('quantity',$this->quantity);
+		$criteria->compare('final_price',$this->final_price,true);
+		$criteria->compare('timestamp',$this->timestamp);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

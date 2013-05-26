@@ -1,19 +1,29 @@
 <?php
 
 /**
- * This is the model class for table "tbl_administrator".
+ * This is the model class for table "{{users}}".
  *
- * The followings are the available columns in table 'tbl_administrator':
+ * The followings are the available columns in table '{{users}}':
  * @property integer $id
  * @property string $username
  * @property string $password
+ * @property string $email
+ * @property string $activkey
+ * @property integer $superuser
+ * @property integer $status
+ * @property string $create_at
+ * @property string $lastvisit_at
+ *
+ * The followings are the available model relations:
+ * @property Profiles $profiles
+ * @property ShoppingCart[] $shoppingCarts
  */
-class Administrator extends CActiveRecord
+class Users extends CActiveRecord
 {
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
-	 * @return Administrator the static model class
+	 * @return Users the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
@@ -25,7 +35,7 @@ class Administrator extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'tbl_administrator';
+		return '{{users}}';
 	}
 
 	/**
@@ -36,12 +46,14 @@ class Administrator extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('username, password', 'required'),
-			array('username', 'length', 'max'=>255),
-			array('password', 'length', 'max'=>32),
+			array('create_at', 'required'),
+			array('superuser, status', 'numerical', 'integerOnly'=>true),
+			array('username', 'length', 'max'=>20),
+			array('password, email, activkey', 'length', 'max'=>128),
+			array('lastvisit_at', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, username, password', 'safe', 'on'=>'search'),
+			array('id, username, password, email, activkey, superuser, status, create_at, lastvisit_at', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -53,6 +65,8 @@ class Administrator extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+			'profiles' => array(self::HAS_ONE, 'Profiles', 'user_id'),
+			'shoppingCarts' => array(self::HAS_MANY, 'ShoppingCart', 'user_id'),
 		);
 	}
 
@@ -65,6 +79,12 @@ class Administrator extends CActiveRecord
 			'id' => 'ID',
 			'username' => 'Username',
 			'password' => 'Password',
+			'email' => 'Email',
+			'activkey' => 'Activkey',
+			'superuser' => 'Superuser',
+			'status' => 'Status',
+			'create_at' => 'Create At',
+			'lastvisit_at' => 'Lastvisit At',
 		);
 	}
 
@@ -82,6 +102,12 @@ class Administrator extends CActiveRecord
 		$criteria->compare('id',$this->id);
 		$criteria->compare('username',$this->username,true);
 		$criteria->compare('password',$this->password,true);
+		$criteria->compare('email',$this->email,true);
+		$criteria->compare('activkey',$this->activkey,true);
+		$criteria->compare('superuser',$this->superuser);
+		$criteria->compare('status',$this->status);
+		$criteria->compare('create_at',$this->create_at,true);
+		$criteria->compare('lastvisit_at',$this->lastvisit_at,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

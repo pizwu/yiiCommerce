@@ -30,10 +30,9 @@
 		$cs->registerScriptFile($this->module->assetsUrl.'/js/jquery.fineuploader-3.5.0.min.js');
 		$cs->registerCssFile($this->module->assetsUrl.'/css/fineuploader-3.5.0.css');
 		
-		// // owned CSS
+		// owned CSS
 		$cs->registerCssFile($this->module->assetsUrl.'/css/main.css');
-		$cs->registerCssFile($this->module->assetsUrl.'/css/category.css');
-		$cs->registerCssFile($this->module->assetsUrl.'/css/product.css');
+		$cs->registerCssFile($this->module->assetsUrl.'/css/shopping.cart.css');
 	?>
 
 	<!-- blueprint CSS framework -->
@@ -64,10 +63,11 @@
 		<?php $this->widget('zii.widgets.CMenu',array(
 			'items'=>array(
 				array('label'=>'Home', 'url'=>array('/site/index')),
-				array('label'=>'Category', 'url'=>array('/yiiCommerce/category/index')), 
-				array('label'=>'Product', 'url'=>array('/yiiCommerce/product/admin')), 
-				array('label'=>'User', 'url'=>array('/user/admin/admin')), 
-				array('label'=>'Language', 'url'=>array('/yiiCommerce/language/admin')), 
+				array('label'=>'Products', 'url'=>array('/yiiCommerce/shop/productListInCategory')),
+				array('label'=>'Cart', 'url'=>array('/yiiCommerce/shoppingCart/admin')),
+				array('label'=>'About', 'url'=>array('/site/page', 'view'=>'about')),
+				array('label'=>'Contact', 'url'=>array('/site/contact')),
+				array('label'=>'Backend', 'url'=>array('/yiiCommerce')), 
 				array('label'=>'Login', 'url'=>array('/user/login'), 'visible'=>Yii::app()->user->isGuest),
 				array('label'=>'Logout ('.Yii::app()->user->name.')', 'url'=>array('/user/logout'), 'visible'=>!Yii::app()->user->isGuest)
 			),

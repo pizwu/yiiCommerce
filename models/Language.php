@@ -1,9 +1,9 @@
 <?php
 
 /**
- * This is the model class for table "tbl_language".
+ * This is the model class for table "{{language}}".
  *
- * The followings are the available columns in table 'tbl_language':
+ * The followings are the available columns in table '{{language}}':
  * @property integer $id
  * @property string $name
  * @property string $code
@@ -13,6 +13,7 @@
  * @property CategoryMultilingual[] $categoryMultilinguals
  * @property LanguageImageRef[] $languageImageRefs
  * @property ManufacturerMultilingual[] $manufacturerMultilinguals
+ * @property OrderStatus[] $orderStatuses
  * @property ProductAttributeMultilingual[] $productAttributeMultilinguals
  * @property ProductMultilingual[] $productMultilinguals
  */
@@ -33,7 +34,7 @@ class Language extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'tbl_language';
+		return '{{language}}';
 	}
 
 	/**
@@ -47,7 +48,7 @@ class Language extends CActiveRecord
 			array('name, code', 'required'),
 			array('sort_order', 'numerical', 'integerOnly'=>true),
 			array('name', 'length', 'max'=>32),
-			array('code', 'length', 'max'=>4),
+			array('code', 'length', 'max'=>2),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, name, code, sort_order', 'safe', 'on'=>'search'),
@@ -65,6 +66,7 @@ class Language extends CActiveRecord
 			'categoryMultilinguals' => array(self::HAS_MANY, 'CategoryMultilingual', 'language_id'),
 			'languageImageRefs' => array(self::HAS_MANY, 'LanguageImageRef', 'language_id'),
 			'manufacturerMultilinguals' => array(self::HAS_MANY, 'ManufacturerMultilingual', 'language_id'),
+			'orderStatuses' => array(self::HAS_MANY, 'OrderStatus', 'language_id'),
 			'productAttributeMultilinguals' => array(self::HAS_MANY, 'ProductAttributeMultilingual', 'language_id'),
 			'productMultilinguals' => array(self::HAS_MANY, 'ProductMultilingual', 'language_id'),
 		);

@@ -1,9 +1,9 @@
 <?php
 
 /**
- * This is the model class for table "tbl_product".
+ * This is the model class for table "{{product}}".
  *
- * The followings are the available columns in table 'tbl_product':
+ * The followings are the available columns in table '{{product}}':
  * @property integer $id
  * @property string $name
  * @property string $sku
@@ -28,6 +28,7 @@
  * @property ProductCategoryRef[] $productCategoryRefs
  * @property ProductImageRef[] $productImageRefs
  * @property ProductMultilingual[] $productMultilinguals
+ * @property ShoppingCart[] $shoppingCarts
  */
 class Product extends CActiveRecord
 {
@@ -46,7 +47,7 @@ class Product extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'tbl_product';
+		return '{{product}}';
 	}
 
 	/**
@@ -85,6 +86,7 @@ class Product extends CActiveRecord
 			'productCategoryRefs' => array(self::HAS_MANY, 'ProductCategoryRef', 'product_id'),
 			'productImageRefs' => array(self::HAS_MANY, 'ProductImageRef', 'product_id'),
 			'productMultilinguals' => array(self::HAS_MANY, 'ProductMultilingual', 'product_id'),
+			'shoppingCarts' => array(self::HAS_MANY, 'ShoppingCart', 'product_id'),
 		);
 	}
 

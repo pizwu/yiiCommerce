@@ -1,26 +1,22 @@
 <?php
 
 /**
- * This is the model class for table "tbl_image".
+ * This is the model class for table "{{profiles}}".
  *
- * The followings are the available columns in table 'tbl_image':
- * @property integer $id
- * @property string $image
- * @property string $type
- * @property integer $size
+ * The followings are the available columns in table '{{profiles}}':
+ * @property integer $user_id
+ * @property string $first_name
+ * @property string $last_name
  *
  * The followings are the available model relations:
- * @property CategoryImageRef[] $categoryImageRefs
- * @property LanguageImageRef[] $languageImageRefs
- * @property ManufacturerImageRef[] $manufacturerImageRefs
- * @property ProductImageRef[] $productImageRefs
+ * @property Users $user
  */
-class Image extends CActiveRecord
+class Profiles extends CActiveRecord
 {
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
-	 * @return Image the static model class
+	 * @return Profiles the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
@@ -32,7 +28,7 @@ class Image extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'tbl_image';
+		return '{{profiles}}';
 	}
 
 	/**
@@ -43,12 +39,10 @@ class Image extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('image', 'required'),
-			array('size', 'numerical', 'integerOnly'=>true),
-			array('type', 'length', 'max'=>45),
+			array('first_name, last_name', 'length', 'max'=>255),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, image, type, size', 'safe', 'on'=>'search'),
+			array('user_id, first_name, last_name', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -60,10 +54,7 @@ class Image extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'categoryImageRefs' => array(self::HAS_MANY, 'CategoryImageRef', 'image_id'),
-			'languageImageRefs' => array(self::HAS_MANY, 'LanguageImageRef', 'image_id'),
-			'manufacturerImageRefs' => array(self::HAS_MANY, 'ManufacturerImageRef', 'image_id'),
-			'productImageRefs' => array(self::HAS_MANY, 'ProductImageRef', 'image_id'),
+			'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
 		);
 	}
 
@@ -73,10 +64,9 @@ class Image extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'id' => 'ID',
-			'image' => 'Image',
-			'type' => 'Type',
-			'size' => 'Size',
+			'user_id' => 'User',
+			'first_name' => 'First Name',
+			'last_name' => 'Last Name',
 		);
 	}
 
@@ -91,10 +81,9 @@ class Image extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('id',$this->id);
-		$criteria->compare('image',$this->image,true);
-		$criteria->compare('type',$this->type,true);
-		$criteria->compare('size',$this->size);
+		$criteria->compare('user_id',$this->user_id);
+		$criteria->compare('first_name',$this->first_name,true);
+		$criteria->compare('last_name',$this->last_name,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
