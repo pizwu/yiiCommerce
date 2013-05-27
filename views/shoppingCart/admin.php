@@ -1,8 +1,8 @@
-<ul id="cart">
+<ul id="cart" class="container">
 	
 	<li class="title">
 		<div class="image span-4">產品</div>
-		<div class="detail span-6">&nbsp;</div>
+		<div class="detail span-8">&nbsp;</div>
 		<div class="price span-4">單價</div>
 		<div class="quantity span-4">數量</div>
 		<div class="total span-4 last">總價</div>
@@ -16,11 +16,11 @@
 		
 		$list = <<<EOD
 		<li class="product">
-			<div class="image span-4 first">
-				<img src="$imageLink" width="140" alt="product" />
+			<div class="image span-4">
+				<img src="$imageLink" width="140" alt="product image" />
 			</div>
 
-			<div class="detail span-6">
+			<div class="detail span-8">
 				<div class="name">$product->name</div>
 			</div>
 
@@ -29,6 +29,8 @@
 			<div class="quantity span-4">x $productInCart->quantity</div>
 
 			<div class="total span-4 last">$ $productInCart->final_price</div>
+			
+			<div class="clear"></div>
 		</li>
 EOD;
 		echo $list;
