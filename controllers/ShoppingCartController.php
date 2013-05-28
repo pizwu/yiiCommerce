@@ -140,7 +140,7 @@ class ShoppingCartController extends Controller
 			
 			// address book
 			// check existing address book / new input, 如果資料有變就加入新的address book
-			if(!empty($_POST['shipping']['address_book_id']))
+			if(isset($_POST['shipping']['address_book_id']) && !empty($_POST['shipping']['address_book_id']))
 				$addressBook = AddressBook::model()->findByPk($_POST['shipping']['address_book_id']);
 			else
 				$addressBook = new AddressBook;
@@ -149,10 +149,11 @@ class ShoppingCartController extends Controller
 			$addressBookIterator = $addressBook->getIterator();
 			do{
 				$key = $addressBookIterator->key();
-				$addressBookIterator->next();
 				
-				if(!isset($_POST['shipping'][$key], $addressBook[$key]) || $_POST['shipping'][$key] == $addressBook[$key])
+				if(!isset($_POST['shipping'][$key]) || $_POST['shipping'][$key] == $addressBook[$key]){
+					$addressBookIterator->next();
 					continue;
+				}
 				else
 					break;
 				

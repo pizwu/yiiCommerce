@@ -15,7 +15,7 @@
 		<h3>Shipping Info</h3>
 		<div id="shipping-info">
 			
-			<?php if (!empty($addressBooks)): ?>
+			<?php if (!$addressBooks[0]->isNewRecord): ?>
 				<!-- AddressBook -->
 				<div class="address-book-selection">
 					<label>Address Book</label>
