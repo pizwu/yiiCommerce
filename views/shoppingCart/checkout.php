@@ -19,7 +19,7 @@
 				<!-- AddressBook -->
 				<div class="address-book-selection">
 					<label>Address Book</label>
-					<select name="shipping[address_book_id]" id="shipping-address-book">
+					<select name="shipping[address_book_id]" id="shipping-address-book" data-type="shipping">
 					<?php foreach ($addressBooks as $key => $addressBook): ?>
 						<option value="<?php echo $addressBook->id ?>">
 							<?php echo $addressBook->first_name.' '.$addressBook->last_name.' - '.$addressBook->street_address.' '.$addressBook->suburb.', '.$addressBook->city.' '.
@@ -134,16 +134,45 @@ EOD;
 
 <script type="text/javascript" charset="utf-8">
 	$(document).ready(function(){
+		
+		// accordion
 		$('#accordion').accordion({
 			heightStyle: "content"
 		});
 		
+		// form validation
 		$('#checkout').validate({
 			ignore: [], 
 			invalidHandler: function(event, validator) {
 				$('.error-message').show();
 			}
 		});
+		
+		// address book view
+		var AddressBook = Backbone.View.extend({
+			initialize: function(){
+				console.log('initialize address book');
+			}, 
+			el: $('.address-book-selection'), 
+			events: {
+				'change > select': 'changeAddressBook'
+			}, 
+			changeAddressBook: function(e){
+				var id = $(e.currentTarget).find('option:selected').val();
+				var type = $(e.currentTarget).data('type');
+				$.post('<?php echo CHtml::normalizeUrl(array("shoppingCart/addressBook")) ?>', { id: id }, function(data, textStatus, xhr) {
+					
+					// filled address into form
+					$.each(data, function(index, val) {
+						var target = type+'-'+index.replace('_', '-');
+						$('#'+target).val(val);
+					});
+					
+				}, 'json');
+				
+			}
+		});
+		var addressBook = new AddressBook;
 	});
 </script>
 <?php endif ?>

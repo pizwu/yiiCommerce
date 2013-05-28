@@ -33,7 +33,7 @@ class ShoppingCartController extends Controller
 				'actions'=>array(
 					'add', 
 					'admin', 
-					'checkout', 
+					'checkout', 'addressBook', 
 				),
 				'users'=>array('@'),
 			),
@@ -233,5 +233,17 @@ class ShoppingCartController extends Controller
 		}
 		
 	}
-
+	
+	/**
+	 * Address Book
+	 * Need: id (address book id)
+	 * return: Address book model
+	 */
+	public function actionAddressBook()
+	{
+		$addressBook = AddressBook::model()->findByPk($_POST['id']);
+		
+		echo CJSON::encode($addressBook);
+	}
+	
 }
