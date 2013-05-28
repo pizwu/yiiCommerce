@@ -128,6 +128,16 @@ class ShoppingCartController extends Controller
 			
 			// Yii::log(CVarDumper::DumpAsString($_POST));
 			
+			// if shopping cart is empty, cancel the order
+			$shoppingCart = ShoppingCart::model()->with(array(
+				'product', 
+			))->findAll('t.user_id=:user_id', array(':user_id'=>Yii::app()->user->id));
+			if(empty($shoppingCart)){
+				$this->render('checkoutSuccess', array(
+				));
+				Yii::app()->end();
+			}
+			
 			// create order
 			$order = new Order;
 			$order->user_id = Yii::app()->user->id;
@@ -183,9 +193,6 @@ class ShoppingCartController extends Controller
 			// credit card info
 			
 			// order - product reference
-			$shoppingCart = ShoppingCart::model()->with(array(
-				'product', 
-			))->findAll('t.user_id=:user_id', array(':user_id'=>Yii::app()->user->id));
 			$subtotal = 0;
 			foreach ($shoppingCart as $key => $cart) {
 				

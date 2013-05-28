@@ -30,9 +30,6 @@
 				</div>
 			<?php endif ?>
 			
-			
-			<input type="hidden" value="<?php echo $addressBooks[0]->id ?>" name="shipping[address_book_id]" />
-			
 			<h4>Company Info</h4>
 			<label for="shipping-company">Company</label>
 			<input type="text" id="shipping-company" name="shipping[company]" value="<?php echo $addressBooks[0]->company ?>" /><br />
