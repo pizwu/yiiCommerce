@@ -107,9 +107,9 @@ class ShoppingCartController extends Controller
 		if(empty($_POST)){
 			
 			// load 1st address
-			$addressBook = AddressBook::model()->find('user_id=:user_id', array(':user_id'=>Yii::app()->user->id));
-			if(empty($addressBook))
-				$addressBook = new AddressBook;
+			$addressBooks = AddressBook::model()->findAll('user_id=:user_id', array(':user_id'=>Yii::app()->user->id));
+			if(empty($addressBooks))
+				$addressBooks = array(new AddressBook);
 
 			// load shopping cart
 			$shoppingCart = ShoppingCart::model()->with(array(
@@ -118,7 +118,7 @@ class ShoppingCartController extends Controller
 			))->findAll('t.user_id=:user_id', array(':user_id'=>Yii::app()->user->id));
 
 			$this->render('checkout', array(
-				'addressBook'=>$addressBook, 
+				'addressBooks'=>$addressBooks, 
 				'shoppingCart'=>$shoppingCart, 
 			));
 			
@@ -149,12 +149,13 @@ class ShoppingCartController extends Controller
 			$addressBookIterator = $addressBook->getIterator();
 			do{
 				$key = $addressBookIterator->key();
-				if(isset($_POST['shipping'][$key], $addressBook[$key]) && $_POST['shipping'][$key] == $addressBook[$key])
+				$addressBookIterator->next();
+				
+				if(!isset($_POST['shipping'][$key], $addressBook[$key]) || $_POST['shipping'][$key] == $addressBook[$key])
 					continue;
 				else
 					break;
-
-				$addressBookIterator->next();
+				
 			}while($addressBookIterator->key());
 
 			// 2 data are different, because it break from iteration
