@@ -1,0 +1,30 @@
+@import "lesshat.less";
+@import "basic.settings.less";
+
+@oddListBackgroundColor: white;
+@evenListBackgroundColor: rgba(180, 255, 255, 0.4);
+
+#checkout {
+	#accordion {
+		> div {
+			> label {
+				width: 110px;
+				display: inline-block;
+			}
+		}
+		.cart {
+			li {
+				list-style-type: none;
+				&.title {
+					border-bottom: 1px solid black;
+					margin-bottom: 10px;
+					padding-bottom: 4px;
+				}
+			}
+		}
+	}
+	
+	.error {
+		color: red;
+	}
+}

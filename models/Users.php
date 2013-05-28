@@ -15,6 +15,8 @@
  * @property string $lastvisit_at
  *
  * The followings are the available model relations:
+ * @property AddressBook[] $addressBooks
+ * @property Order[] $orders
  * @property Profiles $profiles
  * @property ShoppingCart[] $shoppingCarts
  */
@@ -65,6 +67,8 @@ class Users extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+			'addressBooks' => array(self::HAS_MANY, 'AddressBook', 'user_id'),
+			'orders' => array(self::HAS_MANY, 'Order', 'user_id'),
 			'profiles' => array(self::HAS_ONE, 'Profiles', 'user_id'),
 			'shoppingCarts' => array(self::HAS_MANY, 'ShoppingCart', 'user_id'),
 		);

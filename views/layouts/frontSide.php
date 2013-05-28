@@ -32,7 +32,10 @@
 		
 		// owned CSS
 		$cs->registerCssFile($this->module->assetsUrl.'/css/main.css');
-		$cs->registerCssFile($this->module->assetsUrl.'/css/shopping.cart.css');
+		$cs->registerCssFile($this->module->assetsUrl.'/css/checkout.css');
+		
+		if(Yii::app()->controller->id == 'shoppingCart' && Yii::app()->controller->action->id == 'admin')
+			$cs->registerCssFile($this->module->assetsUrl.'/css/shopping.cart.css');
 	?>
 
 	<!-- blueprint CSS framework -->

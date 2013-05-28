@@ -33,6 +33,7 @@ class ShoppingCartController extends Controller
 				'actions'=>array(
 					'add', 
 					'admin', 
+					'checkout', 
 				),
 				'users'=>array('@'),
 			),
@@ -94,6 +95,140 @@ class ShoppingCartController extends Controller
 		$this->render('admin', array(
 			'shoppingCart'=>$shoppingCart, 
 		));
+		
+	}
+	
+	/**
+	 * Checkout
+	 */
+	public function actionCheckout()
+	{
+		// load checkout form
+		if(empty($_POST)){
+			
+			// load 1st address
+			$addressBook = AddressBook::model()->find('user_id=:user_id', array(':user_id'=>Yii::app()->user->id));
+			if(empty($addressBook))
+				$addressBook = new AddressBook;
+
+			// load shopping cart
+			$shoppingCart = ShoppingCart::model()->with(array(
+				'product.productImageRefs', 
+				'user',
+			))->findAll('t.user_id=:user_id', array(':user_id'=>Yii::app()->user->id));
+
+			$this->render('checkout', array(
+				'addressBook'=>$addressBook, 
+				'shoppingCart'=>$shoppingCart, 
+			));
+			
+		}
+		// checkout process
+		else {
+			
+			// Yii::log(CVarDumper::DumpAsString($_POST));
+			
+			// create order
+			$order = new Order;
+			$order->user_id = Yii::app()->user->id;
+			$order->payment_method = 'none';
+			$order->last_modified = time();
+			$order->date_purchased = time();
+			$order->status_id = 1;
+			$order->save();
+			
+			
+			// address book
+			// check existing address book / new input, 如果資料有變就加入新的address book
+			if(!empty($_POST['shipping']['address_book_id']))
+				$addressBook = AddressBook::model()->findByPk($_POST['shipping']['address_book_id']);
+			else
+				$addressBook = new AddressBook;
+			
+			// compare 2 array
+			$addressBookIterator = $addressBook->getIterator();
+			do{
+				$key = $addressBookIterator->key();
+				if(isset($_POST['shipping'][$key], $addressBook[$key]) && $_POST['shipping'][$key] == $addressBook[$key])
+					continue;
+				else
+					break;
+
+				$addressBookIterator->next();
+			}while($addressBookIterator->key());
+
+			// 2 data are different, because it break from iteration
+			// create an new address book
+			if($addressBookIterator->key()){
+				$addressBook = new AddressBook;
+				$addressBook->attributes = $_POST['shipping'];
+				$addressBook->user_id = Yii::app()->user->id;
+				$addressBook->save();
+			}
+			
+			// shipping info
+			$shippingInfo = new OrderShippingInfo;
+			$shippingInfo->attributes = $_POST['shipping'];
+			$shippingInfo->order_id = $order->id;
+			$shippingInfo->save();
+			
+			// // billing info
+			// $billingInfo = new OrderBillingInfo;
+			// $billingInfo->attributes = $_POST['billing'];
+			// $billingInfo->order_id = $order->id;
+			// $billingInfo->save();
+			
+			// credit card info
+			
+			// order - product reference
+			$shoppingCart = ShoppingCart::model()->with(array(
+				'product', 
+			))->findAll('t.user_id=:user_id', array(':user_id'=>Yii::app()->user->id));
+			$subtotal = 0;
+			foreach ($shoppingCart as $key => $cart) {
+				
+				// create reference to product
+				$orderProductRef = new OrderProductRef;
+				$orderProductRef->order_id = $order->id;
+				$orderProductRef->product_id = $cart->product_id;
+				$orderProductRef->product_name = $cart->product->name;
+				$orderProductRef->product_price = $cart->product->price;
+				$orderProductRef->quantity = $cart->quantity;
+				$orderProductRef->final_price = $cart->final_price;
+				$orderProductRef->product_tax = 0;
+				$orderProductRef->save();
+				
+				$subtotal += $orderProductRef->final_price;
+				
+				// remove shopping cart immediately
+				$cart->delete();
+			}
+			
+			// order total
+			$total = new OrderTotal;
+			$total->order_id = $order->id;
+			$total->subtotal = $subtotal;
+			$total->shipping = 0;
+			$total->total = $total->subtotal + $total->shipping;
+			$total->save();
+			
+			// order status history
+			$orderStatusHistory = new OrderStatusHistory;
+			$orderStatusHistory->order_id = $order->id;
+			$orderStatusHistory->order_status_id = $order->status_id;
+			$orderStatusHistory->date_added = time();
+			$orderStatusHistory->notified = 0;
+			$orderStatusHistory->comment = $_POST['comment'];
+			$orderStatusHistory->save();
+			
+			// send notification email (not done yet)
+			
+			$orderStatusHistory->notified = 1;
+			$orderStatusHistory->save();
+			
+			// all done, print success page
+			$this->render('checkoutSuccess');
+		}
 		
 	}
 
