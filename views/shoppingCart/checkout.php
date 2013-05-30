@@ -157,7 +157,7 @@ EOD;
 			changeAddressBook: function(e){
 				var id = $(e.currentTarget).find('option:selected').val();
 				var type = $(e.currentTarget).data('type');
-				$.post('<?php echo CHtml::normalizeUrl(array("shoppingCart/addressBook")) ?>', { id: id }, function(data, textStatus, xhr) {
+				$.post('<?php echo CHtml::normalizeUrl(array("addressBook/read")) ?>', { id: id }, function(data, textStatus, xhr) {
 					
 					// filled address into form
 					$.each(data, function(index, val) {

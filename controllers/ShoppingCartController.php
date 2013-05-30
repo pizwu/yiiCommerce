@@ -31,9 +31,9 @@ class ShoppingCartController extends Controller
 			// ),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
 				'actions'=>array(
-					'add', 'delete', 
+					'add', 'delete', 'clear', 
 					'admin', 
-					'checkout', 'addressBook', 
+					'checkout', 
 				),
 				'users'=>array('@'),
 			),
@@ -93,6 +93,21 @@ class ShoppingCartController extends Controller
 		));
 		
 		$shoppingCart->delete();
+		
+		echo CJSON::encode(1);
+		
+	}
+	
+	/**
+	 * Clear shopping cart
+	 */
+	public function actionClear()
+	{
+		
+		$shoppingCart = ShoppingCart::model()->findAll('user_id=:user_id', array(':user_id'=>Yii::app()->user->id));
+		foreach ($shoppingCart as $key => $cart) {
+			$cart->delete();
+		}
 		
 		echo CJSON::encode(1);
 		
@@ -257,18 +272,6 @@ class ShoppingCartController extends Controller
 			$this->render('checkoutSuccess');
 		}
 		
-	}
-	
-	/**
-	 * Address Book
-	 * Need: id (address book id)
-	 * return: Address book model
-	 */
-	public function actionAddressBook()
-	{
-		$addressBook = AddressBook::model()->findByPk($_POST['id']);
-		
-		echo CJSON::encode($addressBook);
 	}
 	
 }

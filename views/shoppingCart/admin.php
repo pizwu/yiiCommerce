@@ -46,6 +46,17 @@ EOD;
 	}
 	?>
 	
+	<!-- <div class="total">
+		<div class="title span-20">total</div>
+		<div class="price span-4 last">$ 2569</div>
+	</div> --><!-- total -->
+
+	<div class="buttons">
+		<a id="clear-shopping-cart" href="<?php echo CHtml::normalizeUrl(array("shoppingCart/clear")) ?>">clear shopping cart</a>
+		<a href="<?php echo CHtml::normalizeUrl(array("shoppingCart/checkout")) ?>">checkout</a>
+		<a href="<?php echo Yii::app()->request->urlReferrer ?>">continue shopping</a>
+	</div>
+	
 </ul><!-- cart -->
 <script type="text/javascript" charset="utf-8">
 	$(document).ready(function(){
@@ -56,7 +67,8 @@ EOD;
 			},
 			el: $('#cart'),
 			events: {
-				'click .product .delete': 'deleteProduct'
+				'click .product .delete': 'deleteProduct', 
+				'click .buttons a#clear-shopping-cart': 'clearCart'
 			},
 			deleteProduct: function(e){
 				
@@ -67,12 +79,23 @@ EOD;
 				
 				if(result){
 					
-					$.post('<?php echo CHtml::normalizeUrl(array("shoppingCart/delete")) ?>', { id: id }, function(data, textStatus, xhr) {
-						
+					$.post('<?php echo CHtml::normalizeUrl(array("shoppingCart/delete")) ?>', { id: id }, function(data, textStatus, xhr) {	
 						window.location.reload();
-						
 					}, 'json');
 					
+				}
+				
+			}, 
+			clearCart: function(e){
+				
+				e.preventDefault();
+				
+				var result = confirm('clear shopping cart?');
+				
+				if(result){
+					$.post('<?php echo CHtml::normalizeUrl(array("shoppingCart/clear")) ?>', function(data, textStatus, xhr) {
+						window.location.reload();
+					}, 'json');
 				}
 				
 			}
@@ -81,14 +104,4 @@ EOD;
 		
 	});
 </script>
-
-<!-- <div class="total">
-	<div class="title span-20">total</div>
-	<div class="price span-4 last">$ 2569</div>
-</div> --><!-- total -->
-
-<div class="buttons">
-	<a href="<?php echo CHtml::normalizeUrl(array("shoppingCart/checkout")) ?>">checkout</a>
-	<a href="<?php echo Yii::app()->request->urlReferrer ?>">continue shopping</a>
-</div>
 <?php endif ?>
