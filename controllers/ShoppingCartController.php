@@ -31,7 +31,7 @@ class ShoppingCartController extends Controller
 			// ),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
 				'actions'=>array(
-					'add', 
+					'add', 'delete', 
 					'admin', 
 					'checkout', 'addressBook', 
 				),
@@ -78,6 +78,24 @@ class ShoppingCartController extends Controller
 		
 		echo CJSON::encode(1);
 
+	}
+	
+	/**
+	 * Delete product from shopping cart
+	 * Need: id (product id)
+	 */
+	public function actionDelete()
+	{
+		
+		$shoppingCart = ShoppingCart::model()->find('user_id=:user_id AND product_id=:product_id', array(
+			':user_id'=>Yii::app()->user->id, 
+			':product_id'=>$_REQUEST['id'], 
+		));
+		
+		$shoppingCart->delete();
+		
+		echo CJSON::encode(1);
+		
 	}
 	
 	/**
