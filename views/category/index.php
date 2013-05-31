@@ -586,7 +586,7 @@
 						if (responseJSON.success) {
 							$('#product-image-thumbnail').append(
 								'<div class="image-pack">'+
-									'<img src="<?php echo CHtml::normalizeUrl(array("image/load")) ?>&id='+responseJSON.id+'" width="120" alt="product-image" />'+
+									'<img src="<?php echo CHtml::normalizeUrl(array("image/load")) ?>/id/'+responseJSON.id+'" width="120" alt="product-image" />'+
 									'<input type="hidden" name="image[]" value="'+responseJSON.id+'" />'+
 									'<div class="remove-image"><i class="icon-close"></i></div>'+
 								'</div>'	

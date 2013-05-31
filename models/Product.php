@@ -28,6 +28,8 @@
  * @property ProductCategoryRef[] $productCategoryRefs
  * @property ProductImageRef[] $productImageRefs
  * @property ProductMultilingual[] $productMultilinguals
+ * @property ProductSeo[] $productSeos
+ * @property ProductSpecRef[] $productSpecRefs
  * @property ProductTagRef[] $productTagRefs
  * @property ShoppingCart[] $shoppingCarts
  */
@@ -86,6 +88,8 @@ class Product extends CActiveRecord
 			'productCategoryRefs' => array(self::HAS_MANY, 'ProductCategoryRef', 'product_id'),
 			'productImageRefs' => array(self::HAS_MANY, 'ProductImageRef', 'product_id'),
 			'productMultilinguals' => array(self::HAS_MANY, 'ProductMultilingual', 'product_id'),
+			'productSeos' => array(self::HAS_MANY, 'ProductSeo', 'product_id'),
+			'productSpecRefs' => array(self::HAS_MANY, 'ProductSpecRef', 'product_id'),
 			'productTagRefs' => array(self::HAS_MANY, 'ProductTagRef', 'product_id'),
 			'shoppingCarts' => array(self::HAS_MANY, 'ShoppingCart', 'product_id'),
 		);

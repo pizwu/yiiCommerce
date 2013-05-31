@@ -66,7 +66,10 @@ class ProductController extends Controller
 		if(!isset($_POST['id']))
 			$product = new Product;
 		else
-			$product = Product::model()->with('productTagRefs.tag')->findByPk($_POST['id']);
+			$product = Product::model()->with(array(
+				'productTagRefs.tag', 
+				'productSeos', 
+			))->findByPk($_POST['id']);
 			
 		// prepare spec list & value
 		$specList = Spec::model()->findAll(array(
@@ -142,7 +145,13 @@ class ProductController extends Controller
 		if(empty($_POST['id']))
 			$product = new Product;
 		else
-			$product = Product::model()->findByPk($_POST['id']);
+			$product = Product::model()->with(array(
+				'productCategoryRefs', 
+				'productImageRefs', 
+				'productTagRefs', 
+				'productSpecRefs', 
+				'productSeos', 
+			))->findByPk($_POST['id']);
 			
 		$product->attributes = $_POST;
 		$product->status = ($product->status=='on')? 1: 0;
@@ -151,7 +160,7 @@ class ProductController extends Controller
 		
 		// category reference
 		// remove old
-		$categoryRefs = ProductCategoryRef::model()->findAll('product_id=:product_id', array(':product_id'=>$product->id));
+		$categoryRefs = $product->productCategoryRefs;
 		foreach ($categoryRefs as $key => $ref) {
 			$ref->delete();
 		}
@@ -167,7 +176,7 @@ class ProductController extends Controller
 		
 		// image reference
 		// remove old
-		$imageRefs = ProductImageRef::model()->findAll('product_id=:product_id', array(':product_id'=>$product->id));
+		$imageRefs = $product->productImageRefs;
 		foreach ($imageRefs as $key => $ref) {
 			$ref->delete();
 		}
@@ -183,7 +192,7 @@ class ProductController extends Controller
 		
 		// tags reference
 		// remove old
-		$tagRefs = ProductTagRef::model()->findAll('product_id=:product_id', array(':product_id'=>$product->id));
+		$tagRefs = $product->productTagRefs;
 		foreach ($tagRefs as $key => $ref) {
 			$ref->delete();
 		}
@@ -210,7 +219,7 @@ class ProductController extends Controller
 		// spec reference
 		$specList = Spec::model()->findAll(array('order'=>'t.order asc'));
 		// remove old
-		$specRefs = ProductSpecRef::model()->findAll('product_id=:product_id', array(':product_id'=>$product->id));
+		$specRefs = $product->productSpecRefs;
 		foreach ($specRefs as $key => $ref) {
 			$ref->delete();
 		}
@@ -225,6 +234,18 @@ class ProductController extends Controller
 			$ref->value = $value;
 			$ref->save();
 		}
+		
+		// SEO
+		$seo = $product->productSeos[0];
+		if(empty($seo)){
+			$seo = new ProductSeo;
+			$seo->product_id = $product->id;
+		}
+		$seo->title = $_POST['seo_title'];
+		$seo->description = $_POST['seo_description'];
+		$seo->keywords = $_POST['seo_keywords'];
+		$seo->save();
+		
 		
 		echo CJSON::encode(1);
 		

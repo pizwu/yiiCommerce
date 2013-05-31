@@ -101,6 +101,21 @@
 			<label for="product-description">description </label>
 			<textarea name="description" id="product-description" cols="60" rows="8"><?php echo $product->description ?></textarea>
 		</div>
+		
+		
+		<h3>SEO </h3>
+		<div class="pure-control-group">
+			<label for="product-seo-title">title </label>
+			<input type="text" id="product-seo-title" name="seo_title" value="<?php echo (!empty($product->productSeos))? $product->productSeos[0]->title: null ?>" />
+		</div>
+		<div class="pure-control-group">
+			<label for="product-seo-description">description </label>
+			<input type="text" id="product-seo-description" class="pure-input-1-2" name="seo_description" value="<?php echo (!empty($product->productSeos))? $product->productSeos[0]->description: null ?>" />
+		</div>
+		<div class="pure-control-group">
+			<label for="product-seo-keywords">keywords </label>
+			<input type="text" id="product-seo-keywords" class="pure-input-1-2" name="seo_keywords" value="<?php echo (!empty($product->productSeos))? $product->productSeos[0]->keywords: null ?>" />
+		</div>
 	
 		<br />
 	
