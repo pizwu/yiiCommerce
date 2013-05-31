@@ -548,16 +548,6 @@
 					
 					// create: load date picker / category selection from category list
 					if(action=='create'){
-						// initial date picker
-						$('#product-date-available').datepicker({
-							showOn: "button", 
-							dateFormat: "mm/dd/yy"
-						});
-						$('#product-date-available').change(function(){
-							var date = $(this).val();
-							$(this).prev().text(date);
-						});
-						
 						// filled category with selected
 						var selected = $('#category-list li.selected');
 						var category_id = selected.data('id');
@@ -569,6 +559,16 @@
 							'</li>'
 						);
 					}
+					
+					// initial date picker
+					$('#product-date-available').datepicker({
+						showOn: "button", 
+						dateFormat: "mm/dd/yy"
+					});
+					$('#product-date-available').change(function(){
+						var date = $(this).val();
+						$(this).prev().text(date);
+					});
 					
 					// fine uploader
 					$('#upload-product-image').fineUploader({

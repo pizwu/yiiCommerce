@@ -236,8 +236,9 @@ class ProductController extends Controller
 		}
 		
 		// SEO
-		$seo = $product->productSeos[0];
-		if(empty($seo)){
+		if(!empty($product->productSeos))
+			$seo = $product->productSeos[0];
+		else {
 			$seo = new ProductSeo;
 			$seo->product_id = $product->id;
 		}

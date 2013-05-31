@@ -12,6 +12,14 @@
 				<input type="checkbox" id="product-status" name="status" <?php echo (is_null($product->status) || $product->status)? 'checked': '' ?> /> Enable
 			</label>
 		</div>
+		
+		<!-- date available -->
+		<div class="pure-control-group">
+			<label for="product-date-available">date available </label>
+			<?php $date_available = (empty($product->date_available))? date('m/d/Y') : $product->date_available ?>
+			<span id="ui-product-date-available"><?php echo $date_available ?></span>
+			<input type="hidden" id="product-date-available" name="date_available" value="<?php echo $date_available ?>" /><br />
+		</div>
 	
 		<!-- serial number -->
 		<div class="pure-control-group">
@@ -58,14 +66,6 @@
 			<?php endforeach ?>
 			</ul>
 			<button type="button" id="show-category-selector">...</button><br />
-		</div>
-		
-		<!-- date available -->
-		<div class="pure-control-group">
-			<label for="product-date-available">date available </label>
-			<?php $date_available = (empty($product->date_available))? date('m/d/Y') : $product->date_available ?>
-			<span id="ui-product-date-available"><?php echo $date_available ?></span>
-			<input type="hidden" id="product-date-available" name="date_available" value="<?php echo $date_available ?>" /><br />
 		</div>
 		
 		
