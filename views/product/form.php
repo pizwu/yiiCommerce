@@ -79,6 +79,13 @@
 			
 		</div>
 		
+		
+		<!-- tags -->
+		<div class="pure-control-group">
+			<label for="product-tags">tags </label>
+			<input type="text" id="product-tags" class="pure-input-1-2" value="<?php echo $product->tags() ?>" name="tags" />
+		</div>
+		
 	
 		<!-- description -->
 		<div class="pure-control-group">

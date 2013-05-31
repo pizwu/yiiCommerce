@@ -73,7 +73,7 @@ class ProductController extends Controller
 	 */
 	public function actionPrintEditForm()
 	{
-		$product = Product::model()->findByPk($_POST['id']);
+		$product = Product::model()->with('productTagRefs.tag')->findByPk($_POST['id']);
 		
 		$this->renderPartial('form', array(
 			'product'=>$product, 
@@ -165,6 +165,32 @@ class ProductController extends Controller
 				$ref->sort_order = $key+1;
 				$ref->save();
 			}
+		}
+		
+		// tags reference
+		// remove old
+		$tagRefs = ProductTagRef::model()->findAll('product_id=:product_id', array(':product_id'=>$product->id));
+		foreach ($tagRefs as $key => $ref) {
+			$ref->delete();
+		}
+		// create new reference
+		$tags = explode(',', $_POST['tags']);
+		foreach ($tags as $key => $tagName) {
+			$tagName = trim($tagName);
+			
+			// find tag
+			$tag = Tag::model()->find('name=:name', array(':name'=>$tagName));
+			if(empty($tag)){
+				$tag = new Tag;
+				$tag->name = $tagName;
+				$tag->save();
+			}
+			
+			// make reference
+			$ref = new ProductTagRef;
+			$ref->product_id = $product->id;
+			$ref->tag_id = $tag->id;
+			$ref->save();
 		}
 		
 		echo CJSON::encode(1);

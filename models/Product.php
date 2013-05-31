@@ -28,6 +28,7 @@
  * @property ProductCategoryRef[] $productCategoryRefs
  * @property ProductImageRef[] $productImageRefs
  * @property ProductMultilingual[] $productMultilinguals
+ * @property ProductTagRef[] $productTagRefs
  * @property ShoppingCart[] $shoppingCarts
  */
 class Product extends CActiveRecord
@@ -85,6 +86,7 @@ class Product extends CActiveRecord
 			'productCategoryRefs' => array(self::HAS_MANY, 'ProductCategoryRef', 'product_id'),
 			'productImageRefs' => array(self::HAS_MANY, 'ProductImageRef', 'product_id'),
 			'productMultilinguals' => array(self::HAS_MANY, 'ProductMultilingual', 'product_id'),
+			'productTagRefs' => array(self::HAS_MANY, 'ProductTagRef', 'product_id'),
 			'shoppingCarts' => array(self::HAS_MANY, 'ShoppingCart', 'product_id'),
 		);
 	}
@@ -167,5 +169,18 @@ class Product extends CActiveRecord
 		$this->date_available = date('m/d/Y', $this->date_available);
 		
 		return parent::afterFind();
+	}
+	
+	/**
+	 * Combination of tags, into string
+	 */
+	public function tags()
+	{
+		$tags = array();
+		foreach ($this->productTagRefs as $key => $ref) {
+			$tags[] = $ref->tag->name;
+		}
+		
+		return implode(', ', $tags);
 	}
 }

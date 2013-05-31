@@ -524,7 +524,7 @@
 			autoOpen: false, 
 			modal: true, 
 			minHeight: 400, 
-			minWidth: 600, 
+			minWidth: 660, 
 			title: 'Create Product', 
 			closeOnEscape: false, 
 			position: {
