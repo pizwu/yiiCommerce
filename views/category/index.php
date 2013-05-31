@@ -538,10 +538,7 @@
 				var productForm = $('#product-form');
 				var action = $(this).dialog('option', 'action');
 				var id = (action=='create')? null: $('#product-list .selected').data('id');
-				var postUrl = (action=='create')?
-					'<?php echo CHtml::normalizeUrl(array("product/printCreateForm")) ?>':
-					'<?php echo CHtml::normalizeUrl(array("product/printEditForm")) ?>';
-				$.post(postUrl, { id: id }, function(data, textStatus, xhr) {
+				$.post('<?php echo CHtml::normalizeUrl(array("product/form")) ?>', { id: id }, function(data, textStatus, xhr) {
 					
 					// hide loading message
 					productForm.find('.loading-message').hide();

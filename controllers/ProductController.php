@@ -33,7 +33,7 @@ class ProductController extends Controller
 			// ),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
 				'actions'=>array(
-					'admin', 'printCreateForm', 'printEditForm', 'printCategorySelector', 
+					'admin', 'form', 'printCategorySelector', 
 					'save', 'unlinkFromCategory', 'delete', 
 				),
 				'users'=>array('admin'),
@@ -57,27 +57,41 @@ class ProductController extends Controller
 	}
 
 	/**
-	 * Print create form
+	 * Print create/edit form
 	 */
-	public function actionPrintCreateForm()
+	public function actionForm()
 	{
-		$product = new Product;
+		
+		// product
+		if(!isset($_POST['id']))
+			$product = new Product;
+		else
+			$product = Product::model()->with('productTagRefs.tag')->findByPk($_POST['id']);
+			
+		// prepare spec list & value
+		$specList = Spec::model()->findAll(array(
+			'order'=>'t.order asc', 
+		));
+		
+		$specValue = array();
+		foreach ($specList as $key => $spec) {
+			
+			$ref = ProductSpecRef::model()->find('spec_id=:spec_id AND product_id=:product_id', array(
+				':spec_id'=>$spec->id, 
+				':product_id'=>$product->id, 
+			));
+			
+			$specValue[] = (empty($ref))? null: $ref->value;
+			
+		}
+		
 		
 		$this->renderPartial('form', array(
 			'product'=>$product, 
+			'specList'=>$specList, 
+			'specValue'=>$specValue, 
 		));
-	}
-	
-	/**
-	 * Print edit form
-	 */
-	public function actionPrintEditForm()
-	{
-		$product = Product::model()->with('productTagRefs.tag')->findByPk($_POST['id']);
 		
-		$this->renderPartial('form', array(
-			'product'=>$product, 
-		));
 	}
 	
 	/**
@@ -190,6 +204,25 @@ class ProductController extends Controller
 			$ref = new ProductTagRef;
 			$ref->product_id = $product->id;
 			$ref->tag_id = $tag->id;
+			$ref->save();
+		}
+		
+		// spec reference
+		$specList = Spec::model()->findAll(array('order'=>'t.order asc'));
+		// remove old
+		$specRefs = ProductSpecRef::model()->findAll('product_id=:product_id', array(':product_id'=>$product->id));
+		foreach ($specRefs as $key => $ref) {
+			$ref->delete();
+		}
+		// create new reference
+		foreach ($_POST['spec'] as $key => $value) {
+			
+			if(is_null($value))	continue;
+			
+			$ref = new ProductSpecRef;
+			$ref->product_id = $product->id;
+			$ref->spec_id = $specList[$key]->id;
+			$ref->value = $value;
 			$ref->save();
 		}
 		

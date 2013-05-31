@@ -37,6 +37,15 @@
 			<input type="text" id="product-quantity" name="quantity" value="<?php echo $product->quantity ?>" /><br />
 		</div>
 		
+		<!-- Spec -->
+		<h3>Spec</h3>
+		<?php foreach ($specList as $key => $spec): ?>
+			<div class="pure-control-group">
+				<label for="product-spec-<?php echo $spec->name ?>"><?php echo $spec->name ?></label>
+				<input type="text" id="product-spec-<?php echo $spec->name ?>" name="spec[]" value="<?php echo $specValue[$key] ?>" /><br />
+			</div>
+		<?php endforeach ?>
+		
 		<!-- category -->
 		<div class="pure-control-group">
 			<label for="product-category">category</label>

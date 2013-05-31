@@ -4,6 +4,25 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="language" content="en" />
+
+	<!-- jQeury -->
+	<script src="<?php echo Yii::app()->request->baseUrl ?>/js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="<?php echo Yii::app()->request->baseUrl ?>/js/jquery-ui.min.js" type="text/javascript" charset="utf-8"></script>
+
+	<!-- blueprint CSS framework -->
+	<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/screen.css" media="screen, projection" />
+	<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/print.css" media="print" />
+	<!-- Pure CSS -->
+	<link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.1.0/pure-min.css">
+	<!--[if lt IE 8]>
+	<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/ie.css" media="screen, projection" />
+	<![endif]-->
+	
+	<!-- icomoon -->
+	<!--[if lte IE 7]><script src="<?php echo $this->module->assetsUrl.'/js/' ?>lte-ie7.js"></script><![endif]-->
+
+	<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/main.css" />
+	<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/form.css" />
 	
 	<?php
 		$cs = Yii::app()->getClientScript();
@@ -11,8 +30,6 @@
 		// jQuery
 		$cs->scriptMap['jquery.js'] = false;
 		$cs->scriptMap['jquery.ui.js'] = false;
-		$cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/jquery.min.js');
-		$cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/jquery-ui.min.js');
 		$cs->registerCssFile(Yii::app()->request->baseUrl.'/css/pepper-grinder/jquery-ui-1.10.1.custom.min.css');
 		
 		// Backbone
@@ -34,22 +51,8 @@
 		$cs->registerCssFile($this->module->assetsUrl.'/css/main.css');
 		$cs->registerCssFile($this->module->assetsUrl.'/css/category.css');
 		$cs->registerCssFile($this->module->assetsUrl.'/css/product.css');
+		$cs->registerCssFile($this->module->assetsUrl.'/css/dropdownMenu.css');
 	?>
-
-	<!-- blueprint CSS framework -->
-	<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/screen.css" media="screen, projection" />
-	<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/print.css" media="print" />
-	<!-- Pure CSS -->
-	<link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.1.0/pure-min.css">
-	<!--[if lt IE 8]>
-	<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/ie.css" media="screen, projection" />
-	<![endif]-->
-	
-	<!-- icomoon -->
-	<!--[if lte IE 7]><script src="<?php echo $this->module->assetsUrl.'/js/' ?>lte-ie7.js"></script><![endif]-->
-
-	<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/main.css" />
-	<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/form.css" />
 
 	<title><?php echo CHtml::encode($this->pageTitle); ?></title>
 </head>
@@ -64,10 +67,14 @@
 
 	<div id="mainmenu">
 		<?php $this->widget('zii.widgets.CMenu',array(
+			'activateParents'=>true,
 			'items'=>array(
 				array('label'=>'Home', 'url'=>array('/site/index')),
-				array('label'=>'Category', 'url'=>array('/yiiCommerce/category/index')), 
-				array('label'=>'Product', 'url'=>array('/yiiCommerce/product/admin')), 
+				array('label'=>'Product', 'url'=>array('/yiiCommerce/product/admin'), 'items'=>array(
+					array('label'=>'Category', 'url'=>array('/yiiCommerce/category/index')), 
+					array('label'=>'Product', 'url'=>array('/yiiCommerce/product/admin')),
+					array('label'=>'Spec', 'url'=>array('/yiiCommerce/spec/admin')), 
+				)), 
 				array('label'=>'User', 'url'=>array('/user/admin/admin')), 
 				array('label'=>'Language', 'url'=>array('/yiiCommerce/language/admin')), 
 				array('label'=>'Login', 'url'=>array('/user/login'), 'visible'=>Yii::app()->user->isGuest),

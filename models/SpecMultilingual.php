@@ -1,29 +1,24 @@
 <?php
 
 /**
- * This is the model class for table "{{language}}".
+ * This is the model class for table "{{spec_multilingual}}".
  *
- * The followings are the available columns in table '{{language}}':
+ * The followings are the available columns in table '{{spec_multilingual}}':
  * @property integer $id
+ * @property integer $spec_id
+ * @property integer $language_id
  * @property string $name
- * @property string $code
- * @property integer $sort_order
  *
  * The followings are the available model relations:
- * @property CategoryMultilingual[] $categoryMultilinguals
- * @property LanguageImageRef[] $languageImageRefs
- * @property ManufacturerMultilingual[] $manufacturerMultilinguals
- * @property OrderStatus[] $orderStatuses
- * @property ProductAttributeMultilingual[] $productAttributeMultilinguals
- * @property ProductMultilingual[] $productMultilinguals
- * @property SpecMultilingual[] $specMultilinguals
+ * @property Spec $spec
+ * @property Language $language
  */
-class Language extends CActiveRecord
+class SpecMultilingual extends CActiveRecord
 {
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
-	 * @return Language the static model class
+	 * @return SpecMultilingual the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
@@ -35,7 +30,7 @@ class Language extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return '{{language}}';
+		return '{{spec_multilingual}}';
 	}
 
 	/**
@@ -46,13 +41,12 @@ class Language extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('name, code', 'required'),
-			array('sort_order', 'numerical', 'integerOnly'=>true),
-			array('name', 'length', 'max'=>32),
-			array('code', 'length', 'max'=>2),
+			array('spec_id, language_id, name', 'required'),
+			array('spec_id, language_id', 'numerical', 'integerOnly'=>true),
+			array('name', 'length', 'max'=>64),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, name, code, sort_order', 'safe', 'on'=>'search'),
+			array('id, spec_id, language_id, name', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -64,13 +58,8 @@ class Language extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'categoryMultilinguals' => array(self::HAS_MANY, 'CategoryMultilingual', 'language_id'),
-			'languageImageRefs' => array(self::HAS_MANY, 'LanguageImageRef', 'language_id'),
-			'manufacturerMultilinguals' => array(self::HAS_MANY, 'ManufacturerMultilingual', 'language_id'),
-			'orderStatuses' => array(self::HAS_MANY, 'OrderStatus', 'language_id'),
-			'productAttributeMultilinguals' => array(self::HAS_MANY, 'ProductAttributeMultilingual', 'language_id'),
-			'productMultilinguals' => array(self::HAS_MANY, 'ProductMultilingual', 'language_id'),
-			'specMultilinguals' => array(self::HAS_MANY, 'SpecMultilingual', 'language_id'),
+			'spec' => array(self::BELONGS_TO, 'Spec', 'spec_id'),
+			'language' => array(self::BELONGS_TO, 'Language', 'language_id'),
 		);
 	}
 
@@ -81,9 +70,9 @@ class Language extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
+			'spec_id' => 'Spec',
+			'language_id' => 'Language',
 			'name' => 'Name',
-			'code' => 'Code',
-			'sort_order' => 'Sort Order',
 		);
 	}
 
@@ -99,9 +88,9 @@ class Language extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
+		$criteria->compare('spec_id',$this->spec_id);
+		$criteria->compare('language_id',$this->language_id);
 		$criteria->compare('name',$this->name,true);
-		$criteria->compare('code',$this->code,true);
-		$criteria->compare('sort_order',$this->sort_order);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
