@@ -6,23 +6,23 @@
  * The followings are the available columns in table '{{product}}':
  * @property integer $id
  * @property string $name
- * @property string $sku
+ * @property string $sn
+ * @property string $upc
  * @property integer $quantity
  * @property string $model
  * @property string $price
  * @property integer $date_added
  * @property integer $last_modified
  * @property integer $date_available
- * @property string $weight
  * @property integer $status
  * @property integer $tax_class_id
  * @property integer $manufacturer_id
  * @property string $description
- * @property string $url
  * @property integer $viewed
  * @property integer $ordered
  *
  * The followings are the available model relations:
+ * @property OrderProductRef[] $orderProductRefs
  * @property Manufacturer $manufacturer
  * @property ProductAttributeValue[] $productAttributeValues
  * @property ProductCategoryRef[] $productCategoryRefs
@@ -61,15 +61,13 @@ class Product extends CActiveRecord
 			array('name, date_added, status', 'required'),
 			array('quantity, date_added, last_modified, date_available, status, tax_class_id, manufacturer_id, viewed, ordered', 'numerical', 'integerOnly'=>true),
 			array('name', 'length', 'max'=>64),
-			array('sku', 'length', 'max'=>128),
+			array('sn, upc', 'length', 'max'=>128),
 			array('model', 'length', 'max'=>12),
 			array('price', 'length', 'max'=>15),
-			array('weight', 'length', 'max'=>5),
-			array('url', 'length', 'max'=>255),
 			array('description', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, name, sku, quantity, model, price, date_added, last_modified, date_available, weight, status, tax_class_id, manufacturer_id, description, url, viewed, ordered', 'safe', 'on'=>'search'),
+			array('id, name, sn, upc, quantity, model, price, date_added, last_modified, date_available, status, tax_class_id, manufacturer_id, description, viewed, ordered', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -81,6 +79,7 @@ class Product extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+			'orderProductRefs' => array(self::HAS_MANY, 'OrderProductRef', 'product_id'),
 			'manufacturer' => array(self::BELONGS_TO, 'Manufacturer', 'manufacturer_id'),
 			'productAttributeValues' => array(self::HAS_MANY, 'ProductAttributeValue', 'product_id'),
 			'productCategoryRefs' => array(self::HAS_MANY, 'ProductCategoryRef', 'product_id'),
@@ -98,19 +97,18 @@ class Product extends CActiveRecord
 		return array(
 			'id' => 'ID',
 			'name' => 'Name',
-			'sku' => 'Sku',
+			'sn' => 'Sn',
+			'upc' => 'Upc',
 			'quantity' => 'Quantity',
 			'model' => 'Model',
 			'price' => 'Price',
 			'date_added' => 'Date Added',
 			'last_modified' => 'Last Modified',
 			'date_available' => 'Date Available',
-			'weight' => 'Weight',
 			'status' => 'Status',
 			'tax_class_id' => 'Tax Class',
 			'manufacturer_id' => 'Manufacturer',
 			'description' => 'Description',
-			'url' => 'Url',
 			'viewed' => 'Viewed',
 			'ordered' => 'Ordered',
 		);
@@ -129,19 +127,18 @@ class Product extends CActiveRecord
 
 		$criteria->compare('id',$this->id);
 		$criteria->compare('name',$this->name,true);
-		$criteria->compare('sku',$this->sku,true);
+		$criteria->compare('sn',$this->sn,true);
+		$criteria->compare('upc',$this->upc,true);
 		$criteria->compare('quantity',$this->quantity);
 		$criteria->compare('model',$this->model,true);
 		$criteria->compare('price',$this->price,true);
 		$criteria->compare('date_added',$this->date_added);
 		$criteria->compare('last_modified',$this->last_modified);
 		$criteria->compare('date_available',$this->date_available);
-		$criteria->compare('weight',$this->weight,true);
 		$criteria->compare('status',$this->status);
 		$criteria->compare('tax_class_id',$this->tax_class_id);
 		$criteria->compare('manufacturer_id',$this->manufacturer_id);
 		$criteria->compare('description',$this->description,true);
-		$criteria->compare('url',$this->url,true);
 		$criteria->compare('viewed',$this->viewed);
 		$criteria->compare('ordered',$this->ordered);
 

@@ -1,16 +1,17 @@
 <?php
 
 /**
- * This is the model class for table "tbl_product_category_ref".
+ * This is the model class for table "{{product_category_ref}}".
  *
- * The followings are the available columns in table 'tbl_product_category_ref':
+ * The followings are the available columns in table '{{product_category_ref}}':
  * @property integer $id
  * @property integer $product_id
  * @property integer $category_id
+ * @property integer $main
  *
  * The followings are the available model relations:
- * @property Product $product
  * @property Category $category
+ * @property Product $product
  */
 class ProductCategoryRef extends CActiveRecord
 {
@@ -29,7 +30,7 @@ class ProductCategoryRef extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'tbl_product_category_ref';
+		return '{{product_category_ref}}';
 	}
 
 	/**
@@ -41,10 +42,10 @@ class ProductCategoryRef extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('product_id, category_id', 'required'),
-			array('product_id, category_id', 'numerical', 'integerOnly'=>true),
+			array('product_id, category_id, main', 'numerical', 'integerOnly'=>true),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, product_id, category_id', 'safe', 'on'=>'search'),
+			array('id, product_id, category_id, main', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -56,8 +57,8 @@ class ProductCategoryRef extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'product' => array(self::BELONGS_TO, 'Product', 'product_id'),
 			'category' => array(self::BELONGS_TO, 'Category', 'category_id'),
+			'product' => array(self::BELONGS_TO, 'Product', 'product_id'),
 		);
 	}
 
@@ -70,6 +71,7 @@ class ProductCategoryRef extends CActiveRecord
 			'id' => 'ID',
 			'product_id' => 'Product',
 			'category_id' => 'Category',
+			'main' => 'Main',
 		);
 	}
 
@@ -87,6 +89,7 @@ class ProductCategoryRef extends CActiveRecord
 		$criteria->compare('id',$this->id);
 		$criteria->compare('product_id',$this->product_id);
 		$criteria->compare('category_id',$this->category_id);
+		$criteria->compare('main',$this->main);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

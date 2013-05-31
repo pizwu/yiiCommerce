@@ -527,6 +527,10 @@
 			minWidth: 600, 
 			title: 'Create Product', 
 			closeOnEscape: false, 
+			position: {
+				my: 'top-120%', 
+				at: 'center'
+			}, 
 			open: function(event, ui){
 				$(this).find('.loading-message').show();
 				
