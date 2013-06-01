@@ -33,8 +33,10 @@ class ProductController extends Controller
 			// ),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
 				'actions'=>array(
-					'admin', 'form', 'printCategorySelector', 
+					'admin', 'printCategorySelector', 
 					'save', 'unlinkFromCategory', 'delete', 
+					// form elements
+					'form', 'imagePackHTML', 
 				),
 				'users'=>array('admin'),
 			),
@@ -54,47 +56,6 @@ class ProductController extends Controller
 		$this->render('admin', array(
 			'products'=>$products, 
 		));
-	}
-
-	/**
-	 * Print create/edit form
-	 */
-	public function actionForm()
-	{
-		
-		// product
-		if(!isset($_POST['id']))
-			$product = new Product;
-		else
-			$product = Product::model()->with(array(
-				'productTagRefs.tag', 
-				'productSeos', 
-			))->findByPk($_POST['id']);
-			
-		// prepare spec list & value
-		$specList = Spec::model()->findAll(array(
-			'order'=>'t.order asc', 
-		));
-		
-		$specValue = array();
-		foreach ($specList as $key => $spec) {
-			
-			$ref = ProductSpecRef::model()->find('spec_id=:spec_id AND product_id=:product_id', array(
-				':spec_id'=>$spec->id, 
-				':product_id'=>$product->id, 
-			));
-			
-			$specValue[] = (empty($ref))? null: $ref->value;
-			
-		}
-		
-		
-		$this->renderPartial('form', array(
-			'product'=>$product, 
-			'specList'=>$specList, 
-			'specValue'=>$specValue, 
-		));
-		
 	}
 	
 	/**
@@ -186,6 +147,7 @@ class ProductController extends Controller
 				$ref->product_id = $product->id;
 				$ref->image_id = $id;
 				$ref->sort_order = $key+1;
+				$ref->main = ($id == $_POST['main_image_id'])? 1: 0;
 				$ref->save();
 			}
 		}
@@ -197,7 +159,7 @@ class ProductController extends Controller
 			$ref->delete();
 		}
 		// create new reference
-		$tags = explode(',', $_POST['tags']);
+		$tags = (isset($_POST['tags']))? explode(',', $_POST['tags']) : array() ;
 		foreach ($tags as $key => $tagName) {
 			$tagName = trim($tagName);
 			
@@ -224,7 +186,8 @@ class ProductController extends Controller
 			$ref->delete();
 		}
 		// create new reference
-		foreach ($_POST['spec'] as $key => $value) {
+		$specValue = (isset($_POST['spec']))? $_POST['spec'] : array();
+		foreach ($specValue as $key => $value) {
 			
 			if(is_null($value))	continue;
 			
@@ -278,4 +241,86 @@ class ProductController extends Controller
 		
 		echo CJSON::encode(1);
 	}
+	
+	/**
+	 * Print create/edit form
+	 */
+	public function actionForm()
+	{
+		
+		// product
+		if(!isset($_POST['id']) || empty($_POST['id']))
+			$product = new Product;
+		else{
+			$product = Product::model()->with(array(
+				'productTagRefs.tag', 
+				'productSeos', 
+				'productImageRefs'=>array(
+					'order'=>'productImageRefs.sort_order asc', 
+				), 
+			))->findByPk($_POST['id']);
+		}
+			
+		// prepare spec list & value
+		$specList = Spec::model()->findAll(array(
+			'order'=>'t.order asc', 
+		));
+		
+		$specValue = array();
+		foreach ($specList as $key => $spec) {
+			
+			$ref = ProductSpecRef::model()->find('spec_id=:spec_id AND product_id=:product_id', array(
+				':spec_id'=>$spec->id, 
+				':product_id'=>$product->id, 
+			));
+			
+			$specValue[] = (empty($ref))? null: $ref->value;
+			
+		}
+		
+		// main image
+		$mainImageRef = ProductImageRef::model()->with('image')->find('product_id=:product_id AND main=:main', array(
+			':product_id'=>$product->id, 
+			':main'=>1, 
+		));
+		$mainImage = (!empty($mainImageRef))? $mainImageRef->image : null;
+		
+		
+		$this->renderPartial('form', array(
+			'product'=>$product, 
+			'specList'=>$specList, 
+			'specValue'=>$specValue, 
+			'mainImage'=>$mainImage, 
+		));
+		
+	}
+	
+	/**
+	 * Load image pack HTML
+	 * Need: id (image id)
+	 */
+	public function actionImagePackHTML($id=null)
+	{
+		
+		$id = (isset($id))? $id : $_POST['id'];
+		$image = Image::model()->with('productImageRefs')->findByPk($id);
+		$link = CHtml::normalizeUrl(array("image/load", 'id'=>$image->id));
+		
+		// main image class / tag
+		$mainClass = ($image->productImageRefs[0]->main)? 'main' : null;
+		$mainTag = ($image->productImageRefs[0]->main)? '<div class="main-image-tag">main</div>': null;
+		
+		$imagePack = <<<EOD
+		<div class="image-pack $mainClass">
+			$mainTag
+			<img src="$link" width="140" alt="product image" />
+			<input type="hidden" class="image-id" name="image[]" value="$image->id" />
+			<div class="remove-image"><i class="icon-close"></i></div>
+		</div>
+EOD;
+		
+		echo $imagePack;
+		
+	}
+	
 }

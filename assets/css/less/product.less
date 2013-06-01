@@ -31,11 +31,24 @@
 			.image-pack {
 				display: inline-block;
 				position: relative;
+				cursor: pointer;
+				
+				&.main {
+					img {
+						border: 4px solid orangeRed;
+					}
+					.main-image-tag {
+						position: absolute;
+						background: orangeRed;
+						color: white;
+						padding: 2px 8px;
+					}
+				}
 				
 				.remove-image {
 					display: inline-block;
 					position: absolute;
-					left: 98px;
+					right: 7px;
 					top: 7px;
 					cursor: pointer;
 					i {

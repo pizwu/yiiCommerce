@@ -546,8 +546,9 @@
 					// load form
 					productForm.append(data);
 					
-					// create: load date picker / category selection from category list
+					// create: load category selection from category list
 					if(action=='create'){
+						
 						// filled category with selected
 						var selected = $('#category-list li.selected');
 						var category_id = selected.data('id');
@@ -558,7 +559,11 @@
 								'<input type="hidden" name="category[]" value="'+category_id+'" />'+
 							'</li>'
 						);
+						
 					}
+					
+					// sortable image
+					$('#product-image-thumbnail').sortable();
 					
 					// initial date picker
 					$('#product-date-available').datepicker({
@@ -584,13 +589,14 @@
 						}
 					}).on('complete', function(event, id, fileName, responseJSON){
 						if (responseJSON.success) {
-							$('#product-image-thumbnail').append(
-								'<div class="image-pack">'+
-									'<img src="<?php echo CHtml::normalizeUrl(array("image/load")) ?>/id/'+responseJSON.id+'" width="120" alt="product-image" />'+
-									'<input type="hidden" name="image[]" value="'+responseJSON.id+'" />'+
-									'<div class="remove-image"><i class="icon-close"></i></div>'+
-								'</div>'	
-							);
+							
+							// load image-pack HTML
+							$.post('<?php echo CHtml::normalizeUrl(array("product/imagePackHTML")) ?>', 
+							{ id: responseJSON.id }, function(data, textStatus, xhr) {
+								
+								$('#product-image-thumbnail').append(data);
+								
+							}, 'html');
 						}
 					});
 					
@@ -631,7 +637,8 @@
 				"click #show-category-selector": "showCategorySelector", 
 				
 				// image
-				"click .image-pack .remove-image": "removeImage"
+				"click .image-pack .remove-image": "removeImage", 
+				'click .image-pack': 'setMainImage'
 			}, 
 			closeProductForm: function(e){
 				$('#product-form').dialog('close');
@@ -691,6 +698,19 @@
 			}, 
 			removeImage: function(e){
 				$(e.currentTarget).parent().remove();
+			}, 
+			setMainImage: function(e){
+				
+				// switch main class, main tag on image-pack
+				$(this.el).find('.image-pack.main').removeClass('main')
+					.find('.main-image-tag').remove();
+				$(e.currentTarget).addClass('main')
+					.prepend('<div class="main-image-tag">main</div>');
+				
+				// record in hidden input
+				var image_id = $(e.currentTarget).find('input.image-id').val();
+				$('#main-image-recorder').val(image_id);
+				
 			}
 		});
 		var productForm = new ProductForm;

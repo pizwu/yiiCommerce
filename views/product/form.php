@@ -73,17 +73,21 @@
 		<div class="pure-control-group">
 			<label for="product-image">image </label>
 			<div class="pure-controls">
+				<!-- upload container -->
 				<div id="upload-product-image"></div>
+				
+				<!-- image thumbnail container -->
 				<div id="product-image-thumbnail">
-				<?php foreach ($product->productImageRefs as $key => $ref): ?>
-					<div class="image-pack">
-						<img src="<?php echo CHtml::normalizeUrl(array("image/load", 'id'=>$ref->image_id)) ?>" 
-							width="120" alt="product image" />
-						<input type="hidden" name="image[]" value="<?php echo $ref->image_id ?>" />
-						<div class="remove-image"><i class="icon-close"></i></div>
-					</div>
-				<?php endforeach ?>
+				<?php 
+				foreach ($product->productImageRefs as $key => $ref){
+					$this->actionImagePackHTML($ref->image_id);
+				}
+				?>
 				</div><br />
+				
+				<!-- main image recorder -->
+				<input type="hidden" id="main-image-recorder" name="main_image_id" value="<?php echo (isset($mainImage))? $mainImage->id: null ?>" />
+				
 			</div>
 			
 		</div>

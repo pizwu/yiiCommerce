@@ -1,14 +1,15 @@
 <?php
 
 /**
- * This is the model class for table "tbl_product_image_ref".
+ * This is the model class for table "{{product_image_ref}}".
  *
- * The followings are the available columns in table 'tbl_product_image_ref':
+ * The followings are the available columns in table '{{product_image_ref}}':
  * @property integer $id
  * @property integer $product_id
  * @property integer $image_id
  * @property string $htmlcontent
  * @property integer $sort_order
+ * @property integer $main
  *
  * The followings are the available model relations:
  * @property Product $product
@@ -31,7 +32,7 @@ class ProductImageRef extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'tbl_product_image_ref';
+		return '{{product_image_ref}}';
 	}
 
 	/**
@@ -43,11 +44,11 @@ class ProductImageRef extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('product_id, image_id, sort_order', 'required'),
-			array('product_id, image_id, sort_order', 'numerical', 'integerOnly'=>true),
+			array('product_id, image_id, sort_order, main', 'numerical', 'integerOnly'=>true),
 			array('htmlcontent', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, product_id, image_id, htmlcontent, sort_order', 'safe', 'on'=>'search'),
+			array('id, product_id, image_id, htmlcontent, sort_order, main', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -75,6 +76,7 @@ class ProductImageRef extends CActiveRecord
 			'image_id' => 'Image',
 			'htmlcontent' => 'Htmlcontent',
 			'sort_order' => 'Sort Order',
+			'main' => 'Main',
 		);
 	}
 
@@ -94,6 +96,7 @@ class ProductImageRef extends CActiveRecord
 		$criteria->compare('image_id',$this->image_id);
 		$criteria->compare('htmlcontent',$this->htmlcontent,true);
 		$criteria->compare('sort_order',$this->sort_order);
+		$criteria->compare('main',$this->main);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
