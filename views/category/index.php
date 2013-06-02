@@ -590,11 +590,30 @@
 					}).on('complete', function(event, id, fileName, responseJSON){
 						if (responseJSON.success) {
 							
+							var mainImageSet = ($('#product-image-thumbnail > .image-pack').length==0)? false: true;
+							
 							// load image-pack HTML
 							$.post('<?php echo CHtml::normalizeUrl(array("product/imagePackHTML")) ?>', 
 							{ id: responseJSON.id }, function(data, textStatus, xhr) {
 								
+								// append image-pack
 								$('#product-image-thumbnail').append(data);
+								
+								// first image setting main image
+								if(!mainImageSet){
+									
+									var imageId = $('.image-pack').eq(0).find('.image-id').val();
+									
+									// setting main image id
+									$('#main-image-recorder').val(imageId);
+									
+									// setting main image tag
+									$('.image-pack').eq(0).addClass('main').prepend('<div class="main-image-tag">main</div>');
+									
+								}
+								
+								
+								
 								
 							}, 'html');
 						}

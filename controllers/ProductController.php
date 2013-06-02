@@ -307,8 +307,8 @@ class ProductController extends Controller
 		$link = CHtml::normalizeUrl(array("image/load", 'id'=>$image->id));
 		
 		// main image class / tag
-		$mainClass = ($image->productImageRefs[0]->main)? 'main' : null;
-		$mainTag = ($image->productImageRefs[0]->main)? '<div class="main-image-tag">main</div>': null;
+		$mainClass = (!empty($image->productImageRefs) && $image->productImageRefs[0]->main)? 'main' : null;
+		$mainTag = (!empty($image->productImageRefs) && $image->productImageRefs[0]->main)? '<div class="main-image-tag">main</div>': null;
 		
 		$imagePack = <<<EOD
 		<div class="image-pack $mainClass">
