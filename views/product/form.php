@@ -72,9 +72,12 @@
 		<!-- image -->
 		<div class="pure-control-group">
 			<label for="product-image">image </label>
-			<div class="pure-controls">
+			<div id="image-upload-container">
+				
 				<!-- upload container -->
 				<div id="upload-product-image"></div>
+				
+				<div class="notice">(drag to sort)</div>
 				
 				<!-- image thumbnail container -->
 				<div id="product-image-thumbnail">
@@ -87,7 +90,6 @@
 				
 				<!-- main image recorder -->
 				<input type="hidden" id="main-image-recorder" name="main_image_id" value="<?php echo (isset($mainImage))? $mainImage->id: null ?>" />
-				
 			</div>
 			
 		</div>

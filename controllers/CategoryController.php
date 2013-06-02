@@ -35,7 +35,7 @@ class CategoryController extends Controller
 				'actions'=>array(
 					'index', 'expendCategory', 
 					'create', 'rename', 'resort', 'delete', 
-					'loadProductList', 
+					'loadProductList', 'resortProductOrder', 
 				),
 				'users'=>array('admin'),
 			),
@@ -53,7 +53,6 @@ class CategoryController extends Controller
 		$root = Category::model()->findAll(array(
 			'condition'=>'parent_id=:parent_id', 
 			'params'=>array(':parent_id'=>0), 
-			'order'=>'t.sort_order asc', 
 		));
 		
 		$this->render('index', array(
@@ -182,11 +181,35 @@ EOD;
 	 */
 	public function actionLoadProductList()
 	{
-		$productRefs = ProductCategoryRef::model()->findAll('category_id=:category_id', array(':category_id'=>$_POST['category_id']));
+		$productRefs = ProductCategoryRef::model()->with('product.productImageRefs')->findAll(array(
+			'condition'=>'t.category_id=:category_id', 
+			'params'=>array(':category_id'=>$_POST['category_id']), 
+		));
 		
 		$this->renderPartial('productList', array(
 			'productRefs'=>$productRefs, 
 		));
 
+	}
+	
+	/**
+	 * Resort product order
+	 * Need: category_id / orderArray (product_ids)
+	 */
+	public function actionResortProductOrder()
+	{
+		
+		// load products in category
+		$productsInCategory = ProductCategoryRef::model()->findAll('category_id=:category_id', array(':category_id'=>$_POST['category_id']));
+		$orderArray = array_reverse($_POST['orderArray']);
+		
+		// update order
+		foreach ($productsInCategory as $key => $ref) {
+			$ref->order = array_search($ref->product_id, $orderArray)+1;
+			$ref->save();
+		}
+		
+		echo CJSON::encode(1);
+		
 	}
 }

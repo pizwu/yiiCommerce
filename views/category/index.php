@@ -787,63 +787,88 @@
 <!-- Product block -->
 <div class="span-6 last">
 	<div class="title">Product</div>
+	<div class="notice">(drag to sort)</div>
 	<ul id="product-list">
 	</ul>
 </div>
 
 <script type="text/javascript" charset="utf-8">
-	var ProductList = Backbone.View.extend({
-		initialize: function(){
-			console.log('initialize product list');
-		}, 
-		el: $('#product-list'), 
-		events: {
-			"click .edit": "editProduct", 
-			"click .unlink": "unlinkProductFromCategory", 
-			"click .delete": "deleteProduct"
-		}, 
-		editProduct: function(e){
-			
-			$(this.el).find('.selected').removeClass('selected');
-			$(e.currentTarget).parentsUntil('li').parent().addClass('selected');
-			
-			// open dialog
-			$('#product-form').dialog('option', 'title', 'Edit Product').dialog('option', 'action', 'edit').dialog('open');
-			
-		}, 
-		unlinkProductFromCategory: function(e){
-			
-			var product_id = $(e.currentTarget).parentsUntil('li').parent().data('id');
-			var product_name = $(e.currentTarget).parentsUntil('li').parent().find('.name').text();
-			var category = $('#category-list li.selected');
-			var category_id = category.data('id');
-			var category_name = category.find('.name').text();
-			
-			var result = confirm("unlink product: \""+product_name+"\" from category: "+category_name+"?");
-			if(result){
+	$(document).ready(function(){
+		
+		$('#product-list').sortable({
+			stop: function(e, ui){
 				
-				$.post('<?php echo CHtml::normalizeUrl(array("product/unlinkFromCategory")) ?>', { category_id: category_id, product_id: product_id }, function(data, textStatus, xhr) {
-					
-					$(e.currentTarget).parentsUntil('li').parent().remove();
-					
+				var category_id = $('#category-list li.selected').data('id');
+				
+				var orderArray = [];	// record product_id
+				$('#product-list li').each(function(index, element){
+					orderArray.push($(element).data('id'));
+				});
+				
+				// update sort result
+				$.post('<?php echo CHtml::normalizeUrl(array("category/resortProductOrder")) ?>', {
+					category_id: category_id, 
+					orderArray: orderArray
+				}, function(data, textStatus, xhr) {
 				}, 'json');
 				
 			}
-			
-		}, 
-		deleteProduct: function(e){
-			
-			var name = $(e.currentTarget).parentsUntil('li').parent().find('.name').text();
-			var product_id = $(e.currentTarget).parentsUntil('li').parent().data('id');
-			var result = confirm("delete product \""+name+"\"?");
-			if(result){
-				
-				$.post('<?php echo CHtml::normalizeUrl(array("product/delete")) ?>', { id: product_id }, function(data, textStatus, xhr) {
-					$(e.currentTarget).parentsUntil('li').parent().remove();
-				}, 'json');
-				
+		});
+		
+		var ProductList = Backbone.View.extend({
+			initialize: function(){
+				console.log('initialize product list');
+			}, 
+			el: $('#product-list'), 
+			events: {
+				"click .edit": "editProduct", 
+				"click .unlink": "unlinkProductFromCategory", 
+				"click .delete": "deleteProduct"
+			}, 
+			editProduct: function(e){
+
+				$(this.el).find('.selected').removeClass('selected');
+				$(e.currentTarget).parentsUntil('li').parent().addClass('selected');
+
+				// open dialog
+				$('#product-form').dialog('option', 'title', 'Edit Product').dialog('option', 'action', 'edit').dialog('open');
+
+			}, 
+			unlinkProductFromCategory: function(e){
+
+				var product_id = $(e.currentTarget).parentsUntil('li').parent().data('id');
+				var product_name = $(e.currentTarget).parentsUntil('li').parent().find('.name').text();
+				var category = $('#category-list li.selected');
+				var category_id = category.data('id');
+				var category_name = category.find('.name').text();
+
+				var result = confirm("unlink product: \""+product_name+"\" from category: "+category_name+"?");
+				if(result){
+
+					$.post('<?php echo CHtml::normalizeUrl(array("product/unlinkFromCategory")) ?>', { category_id: category_id, product_id: product_id }, function(data, textStatus, xhr) {
+
+						$(e.currentTarget).parentsUntil('li').parent().remove();
+
+					}, 'json');
+
+				}
+
+			}, 
+			deleteProduct: function(e){
+
+				var name = $(e.currentTarget).parentsUntil('li').parent().find('.name').text();
+				var product_id = $(e.currentTarget).parentsUntil('li').parent().data('id');
+				var result = confirm("delete product \""+name+"\"?");
+				if(result){
+
+					$.post('<?php echo CHtml::normalizeUrl(array("product/delete")) ?>', { id: product_id }, function(data, textStatus, xhr) {
+						$(e.currentTarget).parentsUntil('li').parent().remove();
+					}, 'json');
+
+				}
 			}
-		}
+		});
+		var productList = new ProductList;
+		
 	});
-	var productList = new ProductList;
 </script>

@@ -7,6 +7,7 @@
  * @property integer $id
  * @property integer $product_id
  * @property integer $category_id
+ * @property integer $order
  * @property integer $main
  *
  * The followings are the available model relations:
@@ -41,11 +42,11 @@ class ProductCategoryRef extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('product_id, category_id', 'required'),
-			array('product_id, category_id, main', 'numerical', 'integerOnly'=>true),
+			array('product_id, category_id, order', 'required'),
+			array('product_id, category_id, order, main', 'numerical', 'integerOnly'=>true),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, product_id, category_id, main', 'safe', 'on'=>'search'),
+			array('id, product_id, category_id, order, main', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -71,6 +72,7 @@ class ProductCategoryRef extends CActiveRecord
 			'id' => 'ID',
 			'product_id' => 'Product',
 			'category_id' => 'Category',
+			'order' => 'Order',
 			'main' => 'Main',
 		);
 	}
@@ -89,10 +91,18 @@ class ProductCategoryRef extends CActiveRecord
 		$criteria->compare('id',$this->id);
 		$criteria->compare('product_id',$this->product_id);
 		$criteria->compare('category_id',$this->category_id);
+		$criteria->compare('order',$this->order);
 		$criteria->compare('main',$this->main);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));
 	}
+	
+	public function defaultScope()
+    {
+        return array(
+            'order'=>'t.order desc', 
+        );
+    }
 }

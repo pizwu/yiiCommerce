@@ -255,9 +255,7 @@ class ProductController extends Controller
 			$product = Product::model()->with(array(
 				'productTagRefs.tag', 
 				'productSeos', 
-				'productImageRefs'=>array(
-					'order'=>'productImageRefs.sort_order asc', 
-				), 
+				'productImageRefs', 
 			))->findByPk($_POST['id']);
 		}
 			

@@ -102,4 +102,15 @@ class ProductImageRef extends CActiveRecord
 			'criteria'=>$criteria,
 		));
 	}
+	
+	/**
+	 * Default scope
+	 */
+	public function defaultScope()
+	{
+		return array(
+			'order'=>'sort_order asc', 
+		);
+	}
+	
 }

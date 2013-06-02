@@ -12,7 +12,7 @@
 	<?php if (!empty($ref->product->productImageRefs)): ?>
 	<div class="image">
 		<img src="<?php echo CHtml::normalizeUrl(array("image/load", 'id'=>$ref->product->productImageRefs[0]->image_id)) ?>" 
-			width="120" alt="prduct image" />
+			height="80" alt="prduct image" />
 	</div>
 	<?php endif ?>
 	
