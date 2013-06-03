@@ -74,6 +74,7 @@
 					array('label'=>'Product', 'url'=>array('/yiiCommerce/product/admin')),
 					array('label'=>'Category', 'url'=>array('/yiiCommerce/category/index')), 
 					array('label'=>'Spec', 'url'=>array('/yiiCommerce/spec/admin')), 
+					array('label'=>'Tag', 'url'=>array('/yiiCommerce/tag/admin')), 
 				)), 
 				array('label'=>'User', 'url'=>array('/user/admin/admin')), 
 				array('label'=>'Language', 'url'=>array('/yiiCommerce/language/admin')), 

@@ -121,7 +121,7 @@ class ProductController extends Controller
 			$product = Product::model()->with(array(
 				'productCategoryRefs', 
 				'productImageRefs', 
-				'productTagRefs', 
+				'productTagRefs.tag', 
 				'productSpecRefs', 
 				'productSeos', 
 			))->findByPk($_POST['id']);
@@ -193,6 +193,8 @@ class ProductController extends Controller
 		// remove old
 		$tagRefs = $product->productTagRefs;
 		foreach ($tagRefs as $key => $ref) {
+			$ref->tag->count = ($ref->tag->count <= 0)? 0 : $ref->tag->count-1;
+			$ref->tag->save();
 			$ref->delete();
 		}
 		// create new reference
@@ -205,6 +207,11 @@ class ProductController extends Controller
 			if(empty($tag)){
 				$tag = new Tag;
 				$tag->name = $tagName;
+				$tag->count = 1;
+				$tag->save();
+			}
+			else{
+				$tag->count++;
 				$tag->save();
 			}
 			

@@ -6,6 +6,7 @@
  * The followings are the available columns in table '{{tag}}':
  * @property integer $id
  * @property string $name
+ * @property integer $count
  *
  * The followings are the available model relations:
  * @property ProductTagRef[] $productTagRefs
@@ -39,10 +40,11 @@ class Tag extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('name', 'required'),
+			array('count', 'numerical', 'integerOnly'=>true),
 			array('name', 'length', 'max'=>32),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, name', 'safe', 'on'=>'search'),
+			array('id, name, count', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -66,6 +68,7 @@ class Tag extends CActiveRecord
 		return array(
 			'id' => 'ID',
 			'name' => 'Name',
+			'count' => 'Count',
 		);
 	}
 
@@ -82,6 +85,8 @@ class Tag extends CActiveRecord
 
 		$criteria->compare('id',$this->id);
 		$criteria->compare('name',$this->name,true);
+		$criteria->compare('count',$this->count);
+		$criteria->order = 'count desc';
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
