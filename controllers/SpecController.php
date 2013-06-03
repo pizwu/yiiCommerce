@@ -79,6 +79,13 @@ class SpecController extends Controller
 			if($model->save())
 				$this->redirect(array('admin'));
 		}
+		
+		// set max order for new spec
+		$maxOrder = Spec::model()->find(array(
+			'select'=>'MAX(t.order) as maxOrder', 
+		));
+		
+		$model->order = $maxOrder->maxOrder+1;
 
 		$this->render('create',array(
 			'model'=>$model,
