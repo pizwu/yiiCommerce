@@ -187,13 +187,17 @@ class ProductFormDialogWidget extends CWidget {
 							$.post('$productSaveUrl', serializeString
 							, function(data, textStatus, xhr) {
 
-								// reload product list
+								// reload product list: in category view
 								var category_id = $('#category-list li.selected').data('id');
 								$.post('$loadProductListUrl', { category_id: category_id }, function(data, textStatus, xhr) {
 
 									$('#product-list').html(data);
 
 								}, 'html');
+								
+								// reload product list: in product view
+								if($('#product-grid').length!=0)
+									$.fn.yiiGridView.update('product-grid');
 
 								// close form
 								$('#product-form').dialog('close');

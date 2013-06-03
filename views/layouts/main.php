@@ -71,8 +71,8 @@
 			'items'=>array(
 				array('label'=>'Home', 'url'=>array('/site/index')),
 				array('label'=>'Product', 'url'=>array('/yiiCommerce/product/admin'), 'items'=>array(
-					array('label'=>'Category', 'url'=>array('/yiiCommerce/category/index')), 
 					array('label'=>'Product', 'url'=>array('/yiiCommerce/product/admin')),
+					array('label'=>'Category', 'url'=>array('/yiiCommerce/category/index')), 
 					array('label'=>'Spec', 'url'=>array('/yiiCommerce/spec/admin')), 
 				)), 
 				array('label'=>'User', 'url'=>array('/user/admin/admin')), 

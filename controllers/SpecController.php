@@ -28,7 +28,10 @@ class SpecController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view'),
+				'actions'=>array(
+					'', 
+					// 'index','view'
+				),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -36,7 +39,10 @@ class SpecController extends Controller
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'actions'=>array('admin','delete'),
+				'actions'=>array(
+					'admin','delete', 
+					'resortOrder', 
+				),
 				'users'=>array('admin'),
 			),
 			array('deny',  // deny all users
@@ -71,7 +77,7 @@ class SpecController extends Controller
 		{
 			$model->attributes=$_POST['Spec'];
 			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
+				$this->redirect(array('admin'));
 		}
 
 		$this->render('create',array(
@@ -115,6 +121,32 @@ class SpecController extends Controller
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
 		if(!isset($_GET['ajax']))
 			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+	}
+	
+	/**
+	 * Resort order
+	 */
+	public function actionResortOrder()
+	{
+		// Yii::log(CVarDumper::DumpAsString($_POST));
+		
+		$spec = Spec::model()->findByPk($_POST['id']);
+		if($_POST['order']=='+')
+			$switchSpec = Spec::model()->find('t.order=:order', array(':order'=>$spec->order+1));
+		else
+			$switchSpec = Spec::model()->find('t.order=:order', array(':order'=>$spec->order-1));
+			
+		if(!empty($switchSpec)){
+			$tempOrder = $switchSpec->order;
+			$switchSpec->order = $spec->order;
+			$spec->order = $tempOrder;
+
+			$spec->save();
+			$switchSpec->save();
+		}
+		
+		echo CJSON::encode(1);
+		
 	}
 
 	/**

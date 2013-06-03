@@ -8,7 +8,7 @@ $this->breadcrumbs=array(
 );
 
 $this->menu=array(
-	array('label'=>'List Spec', 'url'=>array('index')),
+	// array('label'=>'List Spec', 'url'=>array('index')),
 	array('label'=>'Create Spec', 'url'=>array('create')),
 );
 
@@ -45,11 +45,52 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
 	'dataProvider'=>$model->search(),
 	'filter'=>$model,
 	'columns'=>array(
-		'id',
+		// 'id',
 		'name',
 		'order',
 		array(
 			'class'=>'CButtonColumn',
+			'template'=>'{up}{down}{delete}{update}', 
+			'buttons'=>array(
+				'up'=>array(
+					'label'=>'<i class="icon-arrow-up"></i>', 
+					'url'=>'$data->id', 
+					'click'=>'
+						function(e){
+							e.preventDefault();
+							
+							var id = $(this).prop("href").match(/spec\/\d+/);
+							id = id[0].replace("spec/", "");
+							
+							// update order
+							$.post("'.CHtml::normalizeUrl(array("spec/resortOrder")).'", { id: id, order: "-" }, function(data, textStatus, xhr) {
+								// update grid
+								$.fn.yiiGridView.update("spec-grid");
+							}, "json");
+							
+						}
+					', 
+				), 
+				'down'=>array(
+					'label'=>'<i class="icon-arrow-down"></i>', 
+					'url'=>'$data->id', 
+					'click'=>'
+						function(e){
+							e.preventDefault();
+							
+							var id = $(this).prop("href").match(/spec\/\d+/);
+							id = id[0].replace("spec/", "");
+							
+							// update order
+							$.post("'.CHtml::normalizeUrl(array("spec/resortOrder")).'", { id: id, order: "+" }, function(data, textStatus, xhr) {
+								// update grid
+								$.fn.yiiGridView.update("spec-grid");
+							}, "json");
+							
+						}
+					', 
+				), 
+			), 
 		),
 	),
 )); ?>

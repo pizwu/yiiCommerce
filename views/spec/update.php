@@ -9,9 +9,9 @@ $this->breadcrumbs=array(
 );
 
 $this->menu=array(
-	array('label'=>'List Spec', 'url'=>array('index')),
+	// array('label'=>'List Spec', 'url'=>array('index')),
 	array('label'=>'Create Spec', 'url'=>array('create')),
-	array('label'=>'View Spec', 'url'=>array('view', 'id'=>$model->id)),
+	// array('label'=>'View Spec', 'url'=>array('view', 'id'=>$model->id)),
 	array('label'=>'Manage Spec', 'url'=>array('admin')),
 );
 ?>

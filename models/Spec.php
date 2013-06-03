@@ -85,12 +85,15 @@ class Spec extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('id',$this->id);
-		$criteria->compare('name',$this->name,true);
-		$criteria->compare('order',$this->order);
+		$criteria->compare('t.id',$this->id);
+		$criteria->compare('t.name',$this->name,true);
+		$criteria->compare('t.order',$this->order);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
+			'sort'=>array(
+				'defaultOrder'=>'t.order ASC',
+			), 
 		));
 	}
 }

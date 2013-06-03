@@ -6,9 +6,16 @@ window.onload = function() {
 		el.innerHTML = '<span style="font-family: \'icomoon\'">' + entity + '</span>' + html;
 	}
 	var icons = {
-			'icon-close' : '&#xe001;',
-			'icon-pencil' : '&#xe002;',
-			'icon-link' : '&#xe000;'
+			'icon-close' : '&#xe000;',
+			'icon-pencil' : '&#xe001;',
+			'icon-link' : '&#xe004;',
+			'icon-stack' : '&#xe003;',
+			'icon-arrow-up' : '&#xe002;',
+			'icon-arrow-down' : '&#xe005;',
+			'icon-food' : '&#xe006;',
+			'icon-briefcase' : '&#xe007;',
+			'icon-bolt' : '&#xe008;',
+			'icon-podcast' : '&#xe009;'
 		},
 		els = document.getElementsByTagName('*'),
 		i, attr, html, c, el;

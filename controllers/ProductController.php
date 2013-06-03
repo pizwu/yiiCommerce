@@ -154,21 +154,22 @@ class ProductController extends Controller
 			
 		}
 		// create new from the rest of $_POST['category']
-		foreach ($_POST['category'] as $key => $id) {
-			$ref = new ProductCategoryRef;
-			$ref->product_id = $product->id;
-			$ref->category_id = $id;
-			
-			// find the max order in this category
-			$maxOrder = ProductCategoryRef::model()->find(array(
-				'select'=>'MAX(t.order) as maxOrder', 
-				'condition'=>'t.category_id=:category_id', 
-				'params'=>array(':category_id'=>$id), 
-			));
-			Yii::log($maxOrder->maxOrder);
-			$ref->order = (isset($maxOrder->maxOrder))? $maxOrder->maxOrder+1 : 1;
-			
-			$ref->save();
+		if(isset($_POST['category'])){
+			foreach ($_POST['category'] as $key => $id) {
+				$ref = new ProductCategoryRef;
+				$ref->product_id = $product->id;
+				$ref->category_id = $id;
+
+				// find the max order in this category
+				$maxOrder = ProductCategoryRef::model()->find(array(
+					'select'=>'MAX(t.order) as maxOrder', 
+					'condition'=>'t.category_id=:category_id', 
+					'params'=>array(':category_id'=>$id), 
+				));
+				$ref->order = (isset($maxOrder->maxOrder))? $maxOrder->maxOrder+1 : 1;
+
+				$ref->save();
+			}
 		}
 		
 		// image reference
