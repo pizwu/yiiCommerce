@@ -6,12 +6,13 @@ class ProductController extends Controller
 	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
 	 * using two-column layout. See 'protected/views/layouts/column2.php'.
 	 */
-	public $layout='/layouts/column2';
+	public $layout='/layouts/column1';
 	
 	public function filters()
 	{
 		return array(
 			'accessControl', // perform access control for CRUD operations
+			'postOnly + delete', // we only allow deletion via POST request
 		);
 	}
 	
@@ -51,10 +52,19 @@ class ProductController extends Controller
 	 */
 	public function actionAdmin()
 	{
-		$products = Product::model()->findAll(array('limit'=>20));
+		// $products = Product::model()->findAll(array('limit'=>20));
+		// 
+		// $this->render('admin', array(
+		// 	'products'=>$products, 
+		// ));
 		
-		$this->render('admin', array(
-			'products'=>$products, 
+		$model=new Product('search');
+		$model->unsetAttributes();  // clear any default values
+		if(isset($_GET['Product']))
+			$model->attributes=$_GET['Product'];
+
+		$this->render('admin',array(
+			'model'=>$model,
 		));
 	}
 	
@@ -63,9 +73,11 @@ class ProductController extends Controller
 	 */
 	public function actionPrintCategorySelector()
 	{
+		$selectedCategoryIdArray = (isset($_POST['selectedCategoryIdArray']))? $_POST['selectedCategoryIdArray'] : array();
+		
 		echo '<div id="category-selector-list">';
 			echo "<ul>";
-			$this->printCategorySelector(0, $_POST['selectedCategoryIdArray']);
+			$this->printCategorySelector(0, $selectedCategoryIdArray);
 			echo "</ul>";
 		
 			// buttons
@@ -116,23 +128,51 @@ class ProductController extends Controller
 			
 		$product->attributes = $_POST;
 		$product->status = ($product->status=='on')? 1: 0;
+		$product->price = (empty($_POST['price']))? 0 : $_POST['price'];
 		$product->date_added = time();
 		$product->save();
 		
 		// category reference
-		// remove old
-		$categoryRefs = $product->productCategoryRefs;
-		foreach ($categoryRefs as $key => $ref) {
-			$ref->delete();
-		}
-		// create new
-		if(isset($_POST['category'])){
-			foreach ($_POST['category'] as $key => $id) {
-				$ref = new ProductCategoryRef;
-				$ref->product_id = $product->id;
-				$ref->category_id = $id;
-				$ref->save();
+		// load old, check which should stay, which should delete, by $_POST['category']
+		$originalCategoryRefs = ProductCategoryRef::model()->findAll('product_id=:product_id', array(':product_id'=>$product->id));
+		foreach ($originalCategoryRefs as $key => $ref) {
+			
+			if(isset($_POST['category_id'])){
+				
+				$index = array_search($ref->category_id, $_POST['category']);
+				
+				// keep original reference, do nothing
+				if($index)			
+					unset($_POST['category'][$index]);
+				// remove this reference
+				else 				
+					$ref->delete();
+				
 			}
+			else
+				$ref->delete();
+			
+		}
+		// create new from the rest of $_POST['category']
+		foreach ($_POST['category'] as $key => $id) {
+			$ref = new ProductCategoryRef;
+			$ref->product_id = $product->id;
+			$ref->category_id = $id;
+			
+			// find the max order in this category
+			// $criteria = new CDbCriteria;
+			// $criteria->select = 'MAX(t.order) as max_order';
+			// $criteria->condition = 't.category_id=:category_id';
+			// $criteria->params = array(':category_id'=>$id);
+			// $maxOrder = ProductCategoryRef::model()->find($criteria);
+			$maxOrder = ProductCategoryRef::model()->find(array(
+				'select'=>'MAX(t.order) as max_order', 
+				'condition'=>'t.category_id=:category_id', 
+				'params'=>array(':category_id'=>$id), 
+			));
+			$ref->order = (isset($maxOrder->max_order))? $maxOrder->max_order+1 : 1;
+			
+			$ref->save();
 		}
 		
 		// image reference
@@ -256,6 +296,7 @@ class ProductController extends Controller
 				'productTagRefs.tag', 
 				'productSeos', 
 				'productImageRefs', 
+				'productCategoryRefs', 
 			))->findByPk($_POST['id']);
 		}
 			
@@ -319,6 +360,35 @@ EOD;
 		
 		echo $imagePack;
 		
+	}
+	
+	// tools
+	// ===============================================
+	
+	/**
+	 * Returns the data model based on the primary key given in the GET variable.
+	 * If the data model is not found, an HTTP exception will be raised.
+	 * @param integer the ID of the model to be loaded
+	 */
+	public function loadModel($id)
+	{
+		$model=Product::model()->findByPk($id);
+		if($model===null)
+			throw new CHttpException(404,'The requested page does not exist.');
+		return $model;
+	}
+
+	/**
+	 * Performs the AJAX validation.
+	 * @param CModel the model to be validated
+	 */
+	protected function performAjaxValidation($model)
+	{
+		if(isset($_POST['ajax']) && $_POST['ajax']==='product-form')
+		{
+			echo CActiveForm::validate($model);
+			Yii::app()->end();
+		}
 	}
 	
 }

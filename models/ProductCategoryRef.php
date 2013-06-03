@@ -99,10 +99,15 @@ class ProductCategoryRef extends CActiveRecord
 		));
 	}
 	
-	public function defaultScope()
+	/**
+	 * Scope
+	 */
+	public function scopes()
     {
         return array(
-            'order'=>'t.order desc', 
+            'recently'=>array(
+                'order'=>'t.order DESC', 
+            ),
         );
     }
 }

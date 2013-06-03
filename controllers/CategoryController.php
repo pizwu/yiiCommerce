@@ -181,9 +181,14 @@ EOD;
 	 */
 	public function actionLoadProductList()
 	{
-		$productRefs = ProductCategoryRef::model()->with('product.productImageRefs')->findAll(array(
+		$productRefs = ProductCategoryRef::model()->with(array(
+			'product.productImageRefs'=>array(
+				'order'=>'productImageRefs.main desc', 
+			), 
+		))->findAll(array(
 			'condition'=>'t.category_id=:category_id', 
 			'params'=>array(':category_id'=>$_POST['category_id']), 
+			'order'=>'t.order DESC', 
 		));
 		
 		$this->renderPartial('productList', array(

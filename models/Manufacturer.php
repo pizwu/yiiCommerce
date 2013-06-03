@@ -1,9 +1,9 @@
 <?php
 
 /**
- * This is the model class for table "tbl_manufacturer".
+ * This is the model class for table "{{manufacturer}}".
  *
- * The followings are the available columns in table 'tbl_manufacturer':
+ * The followings are the available columns in table '{{manufacturer}}':
  * @property integer $id
  * @property string $name
  * @property string $manufacturers_image
@@ -35,7 +35,7 @@ class Manufacturer extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'tbl_manufacturer';
+		return '{{manufacturer}}';
 	}
 
 	/**
