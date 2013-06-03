@@ -137,15 +137,15 @@ class ProductController extends Controller
 		$originalCategoryRefs = ProductCategoryRef::model()->findAll('product_id=:product_id', array(':product_id'=>$product->id));
 		foreach ($originalCategoryRefs as $key => $ref) {
 			
-			if(isset($_POST['category_id'])){
+			if(isset($_POST['category'])){
 				
 				$index = array_search($ref->category_id, $_POST['category']);
 				
 				// keep original reference, do nothing
-				if($index)			
+				if($index>=0)
 					unset($_POST['category'][$index]);
 				// remove this reference
-				else 				
+				else
 					$ref->delete();
 				
 			}
@@ -160,17 +160,13 @@ class ProductController extends Controller
 			$ref->category_id = $id;
 			
 			// find the max order in this category
-			// $criteria = new CDbCriteria;
-			// $criteria->select = 'MAX(t.order) as max_order';
-			// $criteria->condition = 't.category_id=:category_id';
-			// $criteria->params = array(':category_id'=>$id);
-			// $maxOrder = ProductCategoryRef::model()->find($criteria);
 			$maxOrder = ProductCategoryRef::model()->find(array(
-				'select'=>'MAX(t.order) as max_order', 
+				'select'=>'MAX(t.order) as maxOrder', 
 				'condition'=>'t.category_id=:category_id', 
 				'params'=>array(':category_id'=>$id), 
 			));
-			$ref->order = (isset($maxOrder->max_order))? $maxOrder->max_order+1 : 1;
+			Yii::log($maxOrder->maxOrder);
+			$ref->order = (isset($maxOrder->maxOrder))? $maxOrder->maxOrder+1 : 1;
 			
 			$ref->save();
 		}
