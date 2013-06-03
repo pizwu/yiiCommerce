@@ -569,13 +569,12 @@
 				var category_id = category.data('id');
 				var category_name = category.find('.name').text();
 
+				var target = $(e.currentTarget);
 				var result = confirm("unlink product: \""+product_name+"\" from category: "+category_name+"?");
 				if(result){
 
 					$.post('<?php echo CHtml::normalizeUrl(array("product/unlinkFromCategory")) ?>', { category_id: category_id, product_id: product_id }, function(data, textStatus, xhr) {
-
-						$(e.currentTarget).parentsUntil('li').parent().remove();
-
+						target.parentsUntil('li').parent().remove(); 
 					}, 'json');
 
 				}
@@ -585,11 +584,13 @@
 
 				var name = $(e.currentTarget).parentsUntil('li').parent().find('.name').text();
 				var product_id = $(e.currentTarget).parentsUntil('li').parent().data('id');
+				var target = $(e.currentTarget);
+				
 				var result = confirm("delete product \""+name+"\"?");
 				if(result){
 
 					$.post('<?php echo CHtml::normalizeUrl(array("product/delete")) ?>', { id: product_id }, function(data, textStatus, xhr) {
-						$(e.currentTarget).parentsUntil('li').parent().remove();
+						target.parentsUntil('li').parent().remove();
 					}, 'json');
 
 				}
