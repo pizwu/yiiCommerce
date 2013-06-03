@@ -47,16 +47,38 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
 )); ?>
 </div><!-- search-form -->
 
+<br />
+<br />
+<button type="button" id="create-product">+ Product</button>
+<script type="text/javascript" charset="utf-8">
+	
+	$(document).ready(function(){
+		
+		var ButtonView = Backbone.View.extend({
+			initialize: function(){
+				console.log('initialize ButtonView');
+			},
+			el: $('body'),
+			events: {
+				'click #create-product': 'showCreateForm'
+			},
+			showCreateForm: function(e){
+				
+				$('#product-form').data('id', null).dialog('open');
+				
+			}
+		});
+		var buttonView = new ButtonView;
+	});
+	
+</script>
+
 <?php $this->widget('zii.widgets.grid.CGridView', array(
 	'id'=>'product-grid',
 	'dataProvider'=>$model->search(),
 	'filter'=>$model,
 	'columns'=>array(
 		// 'id',
-		array(
-			'name'=>'id',
-			'value'=>'$data->id',
-		), 
 		'name',
 		'status',
 		'sn',
